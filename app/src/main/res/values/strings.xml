@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MaReu</string>
+    <string name="app_name">Ma Reu</string>
+    <string name="sortByRoom">Sort by room</string>
+    <string name="sortByTime">Sort by time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
