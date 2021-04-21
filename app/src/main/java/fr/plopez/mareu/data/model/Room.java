@@ -2,20 +2,20 @@ package fr.plopez.mareu.data.model;
 
 public class Room {
     private String name;
-    private String avatarUrl;
+    private int roomId;
 
     // Constructor
-    public Room(String name, String avatarUrl) {
+    public Room(String name, int roomId) {
         this.name = name;
-        this.avatarUrl = avatarUrl;
+        this.roomId = roomId;
     }
 
     // getters
     public String getName() {
         return name;
     }
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public int getRoomId() {
+        return roomId;
     }
 
 }

@@ -3,10 +3,22 @@ package fr.plopez.mareu;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.List;
+
+import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.view.MainActivityFragmentRecyclerViewAdapter;
+import fr.plopez.mareu.view.MainActivityViewModel;
+import fr.plopez.mareu.view.MainActivityViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,14 +27,11 @@ import android.view.ViewGroup;
  */
 public class MainActivityFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "MainActivityFragment";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView meetingsRecyclerView;
+    private MainActivityFragmentRecyclerViewAdapter adapter;
+    private MainActivityViewModel viewModel;
 
     public MainActivityFragment() {
         // Required empty public constructor
@@ -31,34 +40,55 @@ public class MainActivityFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MainActivityFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static MainActivityFragment newInstance(String param1, String param2) {
+    public static MainActivityFragment newInstance() {
         MainActivityFragment fragment = new MainActivityFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+        viewModel = new ViewModelProvider(
+                this,
+                MainActivityViewModelFactory.getInstance())
+                    .get(MainActivityViewModel.class);
+
+        Log.d(TAG, "onCreate: meetings are " + viewModel.getMeetings().getValue());
+
+        adapter = new MainActivityFragmentRecyclerViewAdapter(viewModel.getMeetings().getValue());
+
+        viewModel.getMeetings().observe(this, new Observer<List<Meeting>>() {
+            @Override
+            public void onChanged(List<Meeting> meetings) {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.main_activity_fragment, container, false);
+
+        meetingsRecyclerView = view.findViewById(R.id.main_activity_fragment_meeting_recycler_view);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.main_activity_fragment, container, false);
+        return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initRecyclerView();
+    }
+
+    private void initRecyclerView(){
+        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
+        meetingsRecyclerView.setLayoutManager(linearLayoutManager);
+        meetingsRecyclerView.setAdapter(adapter);
+    }
+
 }

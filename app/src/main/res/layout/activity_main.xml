@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/main_activity_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:title="@string/app_name"
+                app:titleMarginStart="32dp"
+                app:titleTextColor="@color/whiteGrey"
+                app:menu="@menu/mareu_main_activity_sort_menu">
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/main_activity_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_activity_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_baseline_add_24">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/appBarMainActivity"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:title="@string/app_name"
-                    app:titleMarginStart="32dp"
-                    app:titleTextColor="@color/white"
-                    app:menu="@menu/mareu_main_activity_sort_menu"
-
-                    >
-
-                </com.google.android.material.appbar.MaterialToolbar>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>

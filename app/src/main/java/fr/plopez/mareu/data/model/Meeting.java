@@ -1,5 +1,7 @@
 package fr.plopez.mareu.data.model;
 
+import android.util.Log;
+
 import java.util.List;
 
 public class Meeting {
@@ -31,15 +33,14 @@ public class Meeting {
     }
 
     public String getResume() {
-        String resume = subject + RESUME_SEPARATOR + startHour + RESUME_SEPARATOR + room.getName();
+        String resume = subject + RESUME_SEPARATOR + startHour + RESUME_SEPARATOR;
         return resume;
     }
 
     public String getEmails() {
         String emails = "";
-        Integer nbEmails = participantsEmailList.size();
         for (String email:participantsEmailList) {
-            emails.concat(email + EMAIL_SEPARATOR);
+            emails = emails.concat(email + EMAIL_SEPARATOR);
         }
 
         return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
