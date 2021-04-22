@@ -19,9 +19,11 @@ import fr.plopez.mareu.data.model.Meeting;
 public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MainActivityFragmentRecyclerViewViewHolder> {
 
     List<Meeting> meetingsList;
+    DeleteMeetingListener deleteMeetingListener;
 
-    public MainActivityFragmentRecyclerViewAdapter(List<Meeting> meetingsList) {
+    public MainActivityFragmentRecyclerViewAdapter(List<Meeting> meetingsList, DeleteMeetingListener deleteMeetingListener) {
         this.meetingsList = meetingsList;
+        this.deleteMeetingListener = deleteMeetingListener;
     }
 
     @NonNull
@@ -34,7 +36,7 @@ public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapte
         View meetingView = inflater.inflate(R.layout.meeting_recycler_view_item,parent,false);
 
         // Return a new holder instance
-        return new MainActivityFragmentRecyclerViewViewHolder(meetingView);
+        return new MainActivityFragmentRecyclerViewViewHolder(meetingView, deleteMeetingListener);
     }
 
     @Override
@@ -50,6 +52,8 @@ public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapte
 
         holder.meetingResume.setText(meeting.getResume());
         holder.meetingEmails.setText(meeting.getEmails());
+
+        holder.setMeeting(meeting);
     }
 
     @Override

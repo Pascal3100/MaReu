@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,21 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/main_activity_app_bar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:title="@string/app_name"
-                app:titleMarginStart="32dp"
-                app:titleTextColor="@color/whiteGrey"
-                app:menu="@menu/mareu_main_activity_sort_menu">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/add_meeting_activity_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:navigationIconTint="@color/whiteGrey"
+            app:title="@string/app_name"
+            app:titleMarginStart="32dp"
+            app:titleTextColor="@color/whiteGrey"
+            app:menu="@menu/mareu_main_activity_sort_menu">
 
-            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/main_activity_fragment_container"
+        android:id="@+id/add_meeting_activity_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">

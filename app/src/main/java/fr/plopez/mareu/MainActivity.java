@@ -2,9 +2,12 @@ package fr.plopez.mareu;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import fr.plopez.mareu.view.MainActivityFabOnClickListener;
+
+public class MainActivity extends AppCompatActivity implements MainActivityFabOnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -20,5 +23,11 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+    }
+
+    @Override
+    public void onClickListener() {
+        Intent intent = new Intent(MainActivity.this, AddMeetingActivity.class);
+        startActivity(intent);
     }
 }

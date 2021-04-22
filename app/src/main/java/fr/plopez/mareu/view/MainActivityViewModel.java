@@ -1,7 +1,6 @@
 package fr.plopez.mareu.view;
 
-import android.util.Log;
-
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -13,10 +12,10 @@ import fr.plopez.mareu.data.model.Meeting;
 public class MainActivityViewModel extends ViewModel {
 
     private MutableLiveData<List<Meeting>> meetings;
-    private GlobalRepository repo;
+    private GlobalRepository globalRepository;
 
-    public MainActivityViewModel(GlobalRepository repo){
-        this.repo = repo;
+    public MainActivityViewModel(GlobalRepository globalRepository){
+        this.globalRepository = globalRepository;
         init();
     }
 
@@ -28,8 +27,18 @@ public class MainActivityViewModel extends ViewModel {
         if (meetings != null){
             return;
         }
-
-        meetings = repo.getMeetings();
+        meetings = globalRepository.getMeetings();
     }
 
+    // Add a new meeting
+    public void addMeeting(@NonNull Meeting meeting){
+        globalRepository.addMeeting(meeting);
+        meetings.setValue(globalRepository.getMeetings().getValue());
+    }
+
+    // delete selected meeting
+    public void deleteMeeting(@NonNull Meeting meeting){
+        globalRepository.deleteMeeting(meeting);
+        meetings.setValue(globalRepository.getMeetings().getValue());
+    }
 }

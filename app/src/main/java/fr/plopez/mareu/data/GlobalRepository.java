@@ -1,5 +1,6 @@
 package fr.plopez.mareu.data;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
@@ -78,6 +79,15 @@ public class GlobalRepository {
         setRooms();
         //Dummy meetings generation for dev purpose only
         setMeetingsDataSet();
+    }
 
+    // Add a new meeting
+    public void addMeeting(@NonNull Meeting meeting){
+        meetingsDataSet.add(meeting);
+    }
+
+    // delete selected meeting
+    public void deleteMeeting(@NonNull Meeting meeting){
+        meetingsDataSet.remove(meeting);
     }
 }
