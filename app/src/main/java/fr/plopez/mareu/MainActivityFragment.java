@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.databinding.MainActivityFragmentBinding;
 import fr.plopez.mareu.view.DeleteMeetingListener;
 import fr.plopez.mareu.view.MainActivityFabOnClickListener;
 import fr.plopez.mareu.view.MainActivityFragmentRecyclerViewAdapter;
@@ -36,10 +37,10 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
 
     private static final String TAG = "MainActivityFragment";
 
-    private RecyclerView meetingsRecyclerView;
-    private FloatingActionButton fab;
     private MainActivityFragmentRecyclerViewAdapter adapter;
     private MainActivityViewModel viewModel;
+
+    private MainActivityFragmentBinding mainActivityFragmentBinding;
 
     private MainActivityFabOnClickListener fabOnClickListener;
 
@@ -77,8 +78,6 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
                 MainActivityViewModelFactory.getInstance())
                     .get(MainActivityViewModel.class);
 
-        // Log.d(TAG, "onCreate: this = " + this + "and context is " + this.getContext());
-
         adapter = new MainActivityFragmentRecyclerViewAdapter(viewModel.getMeetings().getValue(), (DeleteMeetingListener) this);
 
         viewModel.getMeetings().observe(this, new Observer<List<Meeting>>() {
@@ -92,12 +91,10 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_activity_fragment, container, false);
+        mainActivityFragmentBinding = MainActivityFragmentBinding.inflate(inflater, container, false);
+        View view = mainActivityFragmentBinding.getRoot();
 
-        meetingsRecyclerView = view.findViewById(R.id.main_activity_fragment_meeting_recycler_view);
-        fab = view.findViewById(R.id.main_activity_fragment_fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
+        mainActivityFragmentBinding.mainActivityFragmentFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fabOnClickListener.onClickListener();
@@ -114,10 +111,16 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
         initRecyclerView();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mainActivityFragmentBinding = null;
+    }
+
     private void initRecyclerView(){
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
-        meetingsRecyclerView.setLayoutManager(linearLayoutManager);
-        meetingsRecyclerView.setAdapter(adapter);
+        mainActivityFragmentBinding.mainActivityFragmentMeetingRecyclerView.setLayoutManager(linearLayoutManager);
+        mainActivityFragmentBinding.mainActivityFragmentMeetingRecyclerView.setAdapter(adapter);
     }
 
     @Override

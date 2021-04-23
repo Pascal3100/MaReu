@@ -12,5 +12,6 @@
     <color name="lightBackground">#3A4750</color>
     <color name="redPinkish">#D72323</color>
     <color name="whiteGrey">#EEEEEE</color>
+    <color name="backgroundGrey">#E0E0E0</color>
 
 </resources>

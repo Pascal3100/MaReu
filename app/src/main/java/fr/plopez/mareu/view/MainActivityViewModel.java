@@ -41,4 +41,8 @@ public class MainActivityViewModel extends ViewModel {
         globalRepository.deleteMeeting(meeting);
         meetings.setValue(globalRepository.getMeetings().getValue());
     }
+
+    public List<String> getRoomsNames() {
+        return globalRepository.getRooms();
+    }
 }
