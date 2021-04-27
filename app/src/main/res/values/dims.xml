@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fields_standard_height">40dp</dimen>
+    <dimen name="fields_standard_text_size">20sp</dimen>
+    <dimen name="fields_standard_margin">16dp</dimen>
+
+
+    <dimen name="chips_group_border_width">2dp</dimen>
+    <dimen name="chips_group_border_radius">10dp</dimen>
+
+</resources>

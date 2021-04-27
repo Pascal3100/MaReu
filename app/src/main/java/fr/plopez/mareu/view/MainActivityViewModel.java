@@ -8,6 +8,7 @@ import java.util.List;
 
 import fr.plopez.mareu.data.GlobalRepository;
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.data.model.Room;
 
 public class MainActivityViewModel extends ViewModel {
 
@@ -44,5 +45,8 @@ public class MainActivityViewModel extends ViewModel {
 
     public List<String> getRoomsNames() {
         return globalRepository.getRooms();
+    }
+    public Room getRoomByName(String roomName) {
+        return globalRepository.getRoom(roomName);
     }
 }

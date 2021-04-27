@@ -9,8 +9,9 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import fr.plopez.mareu.databinding.ActivityAddMeetingBinding;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
+import fr.plopez.mareu.view.AddMeetingActivitySaveListener;
 
-public class AddMeetingActivity extends AppCompatActivity {
+public class AddMeetingActivity extends AppCompatActivity implements AddMeetingActivitySaveListener {
 
     private ActivityAddMeetingBinding activityAddMeetingBinding;
 
@@ -39,5 +40,10 @@ public class AddMeetingActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onSaveMeeting() {
+        finish();
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="@dimen/chips_group_border_width"
+        android:color="@color/backgroundGrey">
+    </stroke>
+
+    <corners
+        android:radius="@dimen/chips_group_border_radius">
+    </corners>
+
+
+</shape>

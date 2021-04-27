@@ -1,24 +1,36 @@
 package fr.plopez.mareu;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-import java.util.Calendar;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Time;
-import fr.plopez.mareu.databinding.ActivityAddMeetingBinding;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
+import fr.plopez.mareu.view.AddMeetingActivitySaveListener;
+import fr.plopez.mareu.view.CustomToasts;
+import fr.plopez.mareu.view.MainActivityFabOnClickListener;
 import fr.plopez.mareu.view.MainActivityViewModel;
 import fr.plopez.mareu.view.MainActivityViewModelFactory;
 
@@ -27,12 +39,14 @@ import fr.plopez.mareu.view.MainActivityViewModelFactory;
  * Use the {@link AddMeetingActivityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddMeetingActivityFragment extends Fragment {
+public class AddMeetingActivityFragment extends Fragment implements View.OnClickListener {
 
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
     private MainActivityViewModel viewModel;
+    private AddMeetingActivitySaveListener saveMeetingListener;
 
     private int hour,min;
+    private static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     public AddMeetingActivityFragment() {
         // Required empty public constructor
@@ -43,23 +57,32 @@ public class AddMeetingActivityFragment extends Fragment {
      * this fragment using the provided parameters.
      * @return A new instance of fragment AddMeetingActivityFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static AddMeetingActivityFragment newInstance() {
         AddMeetingActivityFragment fragment = new AddMeetingActivityFragment();
         return fragment;
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof AddMeetingActivitySaveListener) {
+            saveMeetingListener = (AddMeetingActivitySaveListener) context;
+        } else {
+            throw new ClassCastException(context.toString()
+                    + " must implement AddMeetingActivitySaveListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        // Get an instance of ViewModel
         viewModel = new ViewModelProvider(
                 this,
                 MainActivityViewModelFactory.getInstance())
@@ -69,12 +92,54 @@ public class AddMeetingActivityFragment extends Fragment {
         fragAddMeetingActBinding = FragmentAddMeetingActivityBinding.inflate(inflater, container, false);
         View view = fragAddMeetingActBinding.getRoot();
 
+        // Initialize widgets
         init();
 
+        // Set the time picker appears when click on the clock button
         fragAddMeetingActBinding.timePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popTimePicker(v);
+            }
+        });
+
+        // Set the email format check
+        fragAddMeetingActBinding.emailInputContent.setOnEditorActionListener(textListener);
+
+        // Set the save button behavior
+        fragAddMeetingActBinding.saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String subject = fragAddMeetingActBinding.textInputSubjectContent.getText().toString();
+                String selectedRoom = fragAddMeetingActBinding.roomSelectorMenu.getText().toString();
+                String time = fragAddMeetingActBinding.timePickerText.getText().toString();
+                int nbEmails = fragAddMeetingActBinding.emailsChipGroup.getChildCount();
+
+                //Check if all the fields are correctly filled
+                if (subject == null) {
+                    CustomToasts.showErrorToast(getContext(), "Enter a correct subject");
+                    return;
+                } else if (selectedRoom == null) {
+                    CustomToasts.showErrorToast(getContext(), "Enter a correct room");
+                    return;
+                } else if (nbEmails == 0) {
+                    CustomToasts.showErrorToast(getContext(), "Enter at least one email");
+                    return;
+                }
+
+                //
+                int i = 0;
+                List<String> emails = new ArrayList<>();
+                while (i < nbEmails) {
+                    Chip chip = (Chip) fragAddMeetingActBinding.emailsChipGroup.getChildAt(i);
+                    emails.add(chip.getText().toString());
+                    i++;
+                }
+                Meeting meeting = new Meeting(subject, time, viewModel.getRoomByName(selectedRoom), emails);
+                viewModel.addMeeting(meeting);
+
+                saveMeetingListener.onSaveMeeting();
             }
         });
 
@@ -94,6 +159,9 @@ public class AddMeetingActivityFragment extends Fragment {
 
     // Pops timepicker
     public void popTimePicker(View view){
+
+        //set filled clock icon
+        fragAddMeetingActBinding.timePickerButton.setImageResource(R.drawable.ic_baseline_access_time_filled_32);
 
         // Setting current time
         Time time = new Time();
@@ -116,10 +184,49 @@ public class AddMeetingActivityFragment extends Fragment {
         fragAddMeetingActBinding.timePickerText.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, min));
     }
 
+    private TextInputEditText.OnEditorActionListener textListener = new TextInputEditText.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (v.getId() == fragAddMeetingActBinding.emailInputContent.getId()){
+                if (v.getText().toString().trim().matches(emailPattern)) {
+
+                    //Send email in the chip group container
+                    LayoutInflater inflater = getLayoutInflater();
+                    Chip emailChip = (Chip) inflater.inflate(R.layout.email_chip, null,false);
+                    emailChip.setText(v.getText());
+                    emailChip.setOnCloseIconClickListener(AddMeetingActivityFragment.this);
+                    fragAddMeetingActBinding.emailsChipGroup.addView(emailChip);
+
+                    // Clears the text edit area
+                    v.setText("");
+
+                } else {
+                    //TODO afficher un warning à l'utilisateur
+                    CustomToasts.showErrorToast(getContext(), "Email is not valid");
+                }
+            } else if (v.getId() == fragAddMeetingActBinding.textInputSubjectContent.getId()) {
+                if (v.getText() == null || v.getText() == ""){
+
+                } else {
+                    CustomToasts.showErrorToast(getContext(), "Subject can't be empty");
+                }
+            }
+
+            return false;
+        }
+    };
+    
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         fragAddMeetingActBinding = null;
+        // TODO detruire l'objet meeting 
     }
 
+    // On Click on chip delete button
+    @Override
+    public void onClick(View v) {
+        Chip emailChip = (Chip) v;
+        fragAddMeetingActBinding.emailsChipGroup.removeView(emailChip);
+    }
 }
