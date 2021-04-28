@@ -33,7 +33,7 @@ public class Meeting {
     }
 
     public String getResume() {
-        String resume = subject + RESUME_SEPARATOR + startHour + RESUME_SEPARATOR;
+        String resume = subject + RESUME_SEPARATOR + startHour;
         return resume;
     }
 

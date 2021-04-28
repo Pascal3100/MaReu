@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,8 +104,10 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
             }
         });
 
-        // Set the email format check
+        // Set the inputs format check
         fragAddMeetingActBinding.emailInputContent.setOnEditorActionListener(textListener);
+        fragAddMeetingActBinding.textInputSubjectContent.setOnEditorActionListener(textListener);
+        fragAddMeetingActBinding.roomSelectorMenu.setOnEditorActionListener(textListener);
 
         // Set the save button behavior
         fragAddMeetingActBinding.saveButton.setOnClickListener(new View.OnClickListener() {
@@ -117,10 +120,10 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                 int nbEmails = fragAddMeetingActBinding.emailsChipGroup.getChildCount();
 
                 //Check if all the fields are correctly filled
-                if (subject == null) {
+                if (subject.isEmpty()) {
                     CustomToasts.showErrorToast(getContext(), "Enter a correct subject");
                     return;
-                } else if (selectedRoom == null) {
+                } else if (selectedRoom.isEmpty() || !viewModel.getRoomsNames().contains(selectedRoom)) {
                     CustomToasts.showErrorToast(getContext(), "Enter a correct room");
                     return;
                 } else if (nbEmails == 0) {
@@ -201,14 +204,17 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     v.setText("");
 
                 } else {
-                    //TODO afficher un warning à l'utilisateur
                     CustomToasts.showErrorToast(getContext(), "Email is not valid");
                 }
             } else if (v.getId() == fragAddMeetingActBinding.textInputSubjectContent.getId()) {
-                if (v.getText() == null || v.getText() == ""){
 
-                } else {
+                if (v.getText().toString().isEmpty()){
                     CustomToasts.showErrorToast(getContext(), "Subject can't be empty");
+                }
+            } else if (v.getId() == fragAddMeetingActBinding.roomSelectorMenu.getId()) {
+
+                if (!viewModel.getRoomsNames().contains(v.getText().toString())){
+                    CustomToasts.showErrorToast(getContext(), "Select an existing room");
                 }
             }
 

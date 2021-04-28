@@ -8,7 +8,7 @@ import fr.plopez.mareu.R;
 public class CustomToasts {
 
     public static void showErrorToast(Context context, String message) {
-        Toast toast = Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.getView().setBackgroundResource(R.drawable.toast_drawable);
         toast.show();
     }
