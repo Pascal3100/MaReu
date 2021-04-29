@@ -85,8 +85,8 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
 
         viewModel.getMainActivityViewStatesLiveData().observe(this, new Observer<List<MeetingViewState>>() {
             @Override
-            public void onChanged(List<MeetingViewState> meetings) {
-                adapter.submitList(meetings);
+            public void onChanged(List<MeetingViewState> meetingViewStates) {
+                adapter.submitList(meetingViewStates);
             }
         });
     }

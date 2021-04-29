@@ -13,11 +13,16 @@ import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Room;
 
+// todo rename
 public class GlobalRepository {
 
     private static GlobalRepository instance;
-    private HashMap<String,Room> rooms = new HashMap<String,Room>();
-    private ArrayList<Meeting> meetingsDataSet = new ArrayList<>();
+
+    // todo in another repo
+    private final HashMap<String,Room> rooms = new HashMap<>();
+
+    private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
+    private final List<Meeting> meetingList = new ArrayList<>();
 
     // Singleton
     public static GlobalRepository getInstance() {
@@ -39,27 +44,29 @@ public class GlobalRepository {
     }
 
     //Initialize meetings repo
-    private void setMeetingsDataSet() {
-        meetingsDataSet.add(new Meeting(
+    private void setInitialMeetings() {
+        meetingList.add(new Meeting(
                 "Mentorat with Nino",
                 "12:30",
                 getRoom("Flower"),
                 Arrays.asList(new String[] {"pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com"})));
-        meetingsDataSet.add(new Meeting(
+        meetingList.add(new Meeting(
                 "Code review",
                 "9:30",
                 getRoom("Leaf"),
                 Arrays.asList(new String[] {"pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com"})));
-        meetingsDataSet.add(new Meeting(
+        meetingList.add(new Meeting(
                 "JCVD Interview",
                 "11:00",
                 getRoom("Mushroom"),
                 Arrays.asList(new String[] {"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
+
+        meetingListMutableLiveData.setValue(meetingList);
     }
 
     // Retrieve all rooms names
     public List<String> getRooms() {
-        return new ArrayList<String>(rooms.keySet());
+        return new ArrayList<>(rooms.keySet());
     }
 
     // Get Room Object
@@ -70,25 +77,28 @@ public class GlobalRepository {
         return null;
     }
 
-    public MutableLiveData<List<Meeting>> getMeetings(){
-        MutableLiveData<List<Meeting>> data = new MutableLiveData<>();
-        data.setValue(meetingsDataSet);
-        return data;
+    public LiveData<List<Meeting>> getMeetings() {
+        return meetingListMutableLiveData;
     }
 
     private void initRepo(){
         setRooms();
         //Dummy meetings generation for dev purpose only
-        setMeetingsDataSet();
+        setInitialMeetings();
     }
 
     // Add a new meeting
     public void addMeeting(@NonNull Meeting meeting){
-        meetingsDataSet.add(meeting);
+        meetingList.add(meeting);
+
+        meetingListMutableLiveData.setValue(meetingList);
     }
 
     // delete selected meeting
+    // TODO use meeting id instead
     public void deleteMeeting(@NonNull Meeting meeting){
-        meetingsDataSet.remove(meeting);
+        meetingList.remove(meeting);
+
+        meetingListMutableLiveData.setValue(meetingList);
     }
 }
