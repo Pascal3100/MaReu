@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 import fr.plopez.mareu.data.model.Meeting;
@@ -27,6 +29,7 @@ import fr.plopez.mareu.view.MainActivityFabOnClickListener;
 import fr.plopez.mareu.view.MainActivityFragmentRecyclerViewAdapter;
 import fr.plopez.mareu.view.MainActivityViewModel;
 import fr.plopez.mareu.view.MainActivityViewModelFactory;
+import fr.plopez.mareu.view.model.MeetingViewState;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,12 +81,12 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
                 MainActivityViewModelFactory.getInstance())
                     .get(MainActivityViewModel.class);
 
-        adapter = new MainActivityFragmentRecyclerViewAdapter(viewModel.getMeetings().getValue(), (DeleteMeetingListener) this);
+        adapter = new MainActivityFragmentRecyclerViewAdapter((DeleteMeetingListener) this);
 
-        viewModel.getMeetings().observe(this, new Observer<List<Meeting>>() {
+        viewModel.getMainActivityViewStatesLiveData().observe(this, new Observer<List<MeetingViewState>>() {
             @Override
-            public void onChanged(List<Meeting> meetings) {
-                adapter.notifyDataSetChanged();
+            public void onChanged(List<MeetingViewState> meetings) {
+                adapter.submitList(meetings);
             }
         });
     }
@@ -124,7 +127,8 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
     }
 
     @Override
-    public void onClickDeleteMeetingListener(Meeting meeting) {
+    public void onClickDeleteMeetingListener(MeetingViewState meeting) {
         viewModel.deleteMeeting(meeting);
+        // viewModel.addMeeting("JOJO", "12:00", "star", Arrays.asList("toto@gmail.com","jojo@expleo.com"), 2);
     }
 }

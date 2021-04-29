@@ -10,8 +10,6 @@ public class Meeting {
     public String startHour;
     public Room room;
     public List<String> participantsEmailList;
-    private final String RESUME_SEPARATOR = " - ";
-    private final String EMAIL_SEPARATOR = ", ";
 
     // Constructor
     public Meeting(String subject, String startHour, Room room, List<String> participantsEmailList) {
@@ -31,18 +29,7 @@ public class Meeting {
     public Room getRoom() {
         return room;
     }
-
-    public String getResume() {
-        String resume = subject + RESUME_SEPARATOR + startHour;
-        return resume;
-    }
-
-    public String getEmails() {
-        String emails = "";
-        for (String email:participantsEmailList) {
-            emails = emails.concat(email + EMAIL_SEPARATOR);
-        }
-
-        return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
+    public List<String> getParticipantsEmailList() {
+        return participantsEmailList;
     }
 }

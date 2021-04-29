@@ -15,14 +15,14 @@ import java.util.List;
 
 import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MainActivityFragmentRecyclerViewViewHolder> {
 
-    List<Meeting> meetingsList;
+    List<MeetingViewState> meetingViewStates;
     DeleteMeetingListener deleteMeetingListener;
 
-    public MainActivityFragmentRecyclerViewAdapter(List<Meeting> meetingsList, DeleteMeetingListener deleteMeetingListener) {
-        this.meetingsList = meetingsList;
+    public MainActivityFragmentRecyclerViewAdapter(DeleteMeetingListener deleteMeetingListener) {
         this.deleteMeetingListener = deleteMeetingListener;
     }
 
@@ -42,22 +42,30 @@ public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapte
     @Override
     public void onBindViewHolder(@NonNull MainActivityFragmentRecyclerViewViewHolder holder, int position) {
         Log.d("TAG", "onBindViewHolder: item id " + position + "created");
-        Meeting meeting = meetingsList.get(position);
+        MeetingViewState meeting = meetingViewStates.get(position);
 
         Context context = holder.roomIcon.getContext();
         Glide.with(context)
-                .load(context.getResources().getDrawable(meeting.getRoom().getRoomId()))
+                .load(context.getResources().getDrawable(meeting.getRoomDrawableId()))
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.roomIcon);
 
-        holder.meetingResume.setText(meeting.getResume());
-        holder.meetingEmails.setText(meeting.getEmails());
+        holder.meetingResume.setText(meeting.getMeetingResume());
+        holder.meetingEmails.setText(meeting.getMeetingEmails());
 
         holder.setMeeting(meeting);
     }
 
     @Override
     public int getItemCount() {
-        return meetingsList.size();
+        if (meetingViewStates == null) {
+            return 0;
+        }
+        return meetingViewStates.size();
+    }
+
+    public void submitList(List<MeetingViewState> meetings) {
+        meetingViewStates = meetings;
+        notifyDataSetChanged();
     }
 }

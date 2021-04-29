@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.GlobalRepository;
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityFragmentRecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
@@ -20,7 +21,7 @@ public class MainActivityFragmentRecyclerViewViewHolder extends RecyclerView.Vie
     public TextView meetingResume;
     public TextView meetingEmails;
     public AppCompatImageButton trashIcon;
-    private Meeting meeting;
+    private MeetingViewState meeting;
     private DeleteMeetingListener deleteMeetingListener;
 
     public MainActivityFragmentRecyclerViewViewHolder(@NonNull View itemView, DeleteMeetingListener deleteMeetingListener) {
@@ -44,7 +45,7 @@ public class MainActivityFragmentRecyclerViewViewHolder extends RecyclerView.Vie
         });
     }
 
-    public void setMeeting(Meeting meeting) {
+    public void setMeeting(MeetingViewState meeting) {
         this.meeting = meeting;
     }
 }

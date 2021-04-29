@@ -131,7 +131,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     return;
                 }
 
-                //
+                // Get all the emails in chips
                 int i = 0;
                 List<String> emails = new ArrayList<>();
                 while (i < nbEmails) {
@@ -139,8 +139,8 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     emails.add(chip.getText().toString());
                     i++;
                 }
-                Meeting meeting = new Meeting(subject, time, viewModel.getRoomByName(selectedRoom), emails);
-                viewModel.addMeeting(meeting);
+
+                viewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
 
                 saveMeetingListener.onSaveMeeting();
             }
