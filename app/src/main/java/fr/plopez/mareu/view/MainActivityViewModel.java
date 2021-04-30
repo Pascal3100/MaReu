@@ -12,7 +12,8 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.plopez.mareu.data.GlobalRepository;
+import fr.plopez.mareu.data.MeetingsRepository;
+import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Room;
 import fr.plopez.mareu.view.model.MeetingViewState;
@@ -25,11 +26,13 @@ public class MainActivityViewModel extends ViewModel {
     private final String EMAIL_SEPARATOR = ", ";
 
     private final LiveData<List<Meeting>> meetingsLiveData;
-    private GlobalRepository globalRepository;
+    private MeetingsRepository meetingsRepository;
+    private RoomsRepository roomsRepository;
 
-    public MainActivityViewModel(GlobalRepository globalRepository){
-        this.globalRepository = globalRepository;
-        meetingsLiveData = globalRepository.getMeetings();
+    public MainActivityViewModel(MeetingsRepository meetingsRepository, RoomsRepository roomsRepository){
+        this.meetingsRepository = meetingsRepository;
+        this.roomsRepository = roomsRepository;
+        meetingsLiveData = meetingsRepository.getMeetings();
     }
 
     public LiveData<List<MeetingViewState>> getMainActivityViewStatesLiveData() {
@@ -65,7 +68,7 @@ public class MainActivityViewModel extends ViewModel {
         if (subject.isEmpty()) {
             // CustomToasts.showErrorToast(getContext(), "Enter a correct subject");
             return;
-        } else if (room.isEmpty() || !getRoomsNames().contains(room)) {
+        } else if (room.isEmpty() || !roomsRepository.getRoomsNames().contains(room)) {
             // CustomToasts.showErrorToast(getContext(), "Enter a correct room");
             return;
         } else if (nbEmails == 0) {
@@ -73,24 +76,12 @@ public class MainActivityViewModel extends ViewModel {
             return;
         }
 
-        Log.d(TAG, "------ addMeeting: before adding: " + globalRepository.getMeetings().getValue());
-        globalRepository.addMeeting(new Meeting(subject, time, getRoomByName(room), emails));
-        Log.d(TAG, "------ addMeeting: after adding: " + globalRepository.getMeetings().getValue());
+        meetingsRepository.addMeeting(new Meeting(subject, time, roomsRepository.getRoomByName(room), emails));
     }
 
     // Delete selected meeting
     public void deleteMeeting(@NonNull MeetingViewState meeting){
-        globalRepository.deleteMeeting(meeting.getMeetingObjectRef());
-    }
-
-    // Retrieve Rooms names
-    public List<String> getRoomsNames() {
-        return globalRepository.getRooms();
-    }
-
-    // Retrieve room object by its name
-    public Room getRoomByName(String roomName) {
-        return globalRepository.getRoom(roomName);
+        meetingsRepository.deleteMeeting(meeting.getMeetingObjectRef());
     }
 
     // Calculate resume text to display in view holders
@@ -106,5 +97,10 @@ public class MainActivityViewModel extends ViewModel {
             emails = emails.concat(email + EMAIL_SEPARATOR);
         }
         return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
+    }
+
+    // Provides rooms names
+    public List<String> getRoomsNames() {
+        return roomsRepository.getRoomsNames();
     }
 }

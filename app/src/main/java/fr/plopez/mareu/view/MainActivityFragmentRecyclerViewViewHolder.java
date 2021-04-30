@@ -1,8 +1,6 @@
 package fr.plopez.mareu.view;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,8 +9,6 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import fr.plopez.mareu.R;
-import fr.plopez.mareu.data.GlobalRepository;
-import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityFragmentRecyclerViewViewHolder extends RecyclerView.ViewHolder {

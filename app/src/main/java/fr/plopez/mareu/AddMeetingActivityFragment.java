@@ -8,16 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
@@ -26,12 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
 import fr.plopez.mareu.view.AddMeetingActivitySaveListener;
 import fr.plopez.mareu.view.CustomToasts;
-import fr.plopez.mareu.view.MainActivityFabOnClickListener;
 import fr.plopez.mareu.view.MainActivityViewModel;
 import fr.plopez.mareu.view.MainActivityViewModelFactory;
 
@@ -43,7 +38,7 @@ import fr.plopez.mareu.view.MainActivityViewModelFactory;
 public class AddMeetingActivityFragment extends Fragment implements View.OnClickListener {
 
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
-    private MainActivityViewModel viewModel;
+    private MainActivityViewModel mainActivityViewModel;
     private AddMeetingActivitySaveListener saveMeetingListener;
 
     private int hour,min;
@@ -84,7 +79,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                              Bundle savedInstanceState) {
 
         // Get an instance of ViewModel
-        viewModel = new ViewModelProvider(
+        mainActivityViewModel = new ViewModelProvider(
                 this,
                 MainActivityViewModelFactory.getInstance())
                 .get(MainActivityViewModel.class);
@@ -123,7 +118,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                 if (subject.isEmpty()) {
                     CustomToasts.showErrorToast(getContext(), "Enter a correct subject");
                     return;
-                } else if (selectedRoom.isEmpty() || !viewModel.getRoomsNames().contains(selectedRoom)) {
+                } else if (selectedRoom.isEmpty() || !mainActivityViewModel.getRoomsNames().contains(selectedRoom)) {
                     CustomToasts.showErrorToast(getContext(), "Enter a correct room");
                     return;
                 } else if (nbEmails == 0) {
@@ -140,7 +135,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     i++;
                 }
 
-                viewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
+                mainActivityViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
 
                 saveMeetingListener.onSaveMeeting();
             }
@@ -155,7 +150,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
         min = time.getCurrentMin();
         updateTimeText();
 
-        List<String> items = viewModel.getRoomsNames();
+        List<String> items = mainActivityViewModel.getRoomsNames();
         ArrayAdapter adapter = new ArrayAdapter(requireContext(),R.layout.drop_down_item, items);
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
     }
@@ -213,7 +208,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                 }
             } else if (v.getId() == fragAddMeetingActBinding.roomSelectorMenu.getId()) {
 
-                if (!viewModel.getRoomsNames().contains(v.getText().toString())){
+                if (!mainActivityViewModel.getRoomsNames().contains(v.getText().toString())){
                     CustomToasts.showErrorToast(getContext(), "Select an existing room");
                 }
             }
