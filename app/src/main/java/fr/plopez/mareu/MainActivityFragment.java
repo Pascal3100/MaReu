@@ -1,7 +1,6 @@
 package fr.plopez.mareu;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,24 +10,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
-import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.databinding.MainActivityFragmentBinding;
 import fr.plopez.mareu.view.DeleteMeetingListener;
 import fr.plopez.mareu.view.MainActivityFabOnClickListener;
 import fr.plopez.mareu.view.MainActivityFragmentRecyclerViewAdapter;
-import fr.plopez.mareu.view.MainActivityViewModel;
-import fr.plopez.mareu.view.MainActivityViewModelFactory;
+import fr.plopez.mareu.view.add.AddMeetingViewModel;
+import fr.plopez.mareu.view.ViewModelFactory;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
 /**
@@ -41,7 +34,7 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
     private static final String TAG = "MainActivityFragment";
 
     private MainActivityFragmentRecyclerViewAdapter adapter;
-    private MainActivityViewModel viewModel;
+    private AddMeetingViewModel viewModel;
 
     private MainActivityFragmentBinding mainActivityFragmentBinding;
 
@@ -78,8 +71,8 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
 
         viewModel = new ViewModelProvider(
                 this,
-                MainActivityViewModelFactory.getInstance())
-                    .get(MainActivityViewModel.class);
+                ViewModelFactory.getInstance())
+                    .get(AddMeetingViewModel.class);
 
         adapter = new MainActivityFragmentRecyclerViewAdapter((DeleteMeetingListener) this);
 

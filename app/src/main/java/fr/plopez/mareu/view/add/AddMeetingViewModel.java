@@ -1,4 +1,4 @@
-package fr.plopez.mareu.view;
+package fr.plopez.mareu.view.add;
 
 import android.util.Log;
 
@@ -16,13 +16,12 @@ import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.utils.SingleLiveEvent;
-import fr.plopez.mareu.view.add.AddMeetingViewAction;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivityViewModel extends ViewModel {
+public class AddMeetingViewModel extends ViewModel {
 
     private static final String RESUME_SEPARATOR = " - ";
     private static final String EMAIL_SEPARATOR = ", ";
@@ -33,7 +32,7 @@ public class MainActivityViewModel extends ViewModel {
     private final LiveData<List<Meeting>> meetingsLiveData;
     private final SingleLiveEvent<AddMeetingViewAction> mAddMeetingViewActionSingleLiveEvent = new SingleLiveEvent<>();
 
-    public MainActivityViewModel(MeetingsRepository meetingsRepository, RoomsRepository roomsRepository){
+    public AddMeetingViewModel(MeetingsRepository meetingsRepository, RoomsRepository roomsRepository){
         this.meetingsRepository = meetingsRepository;
         this.roomsRepository = roomsRepository;
         meetingsLiveData = meetingsRepository.getMeetings();
@@ -80,14 +79,9 @@ public class MainActivityViewModel extends ViewModel {
         } else if (nbEmails == 0) {
             mAddMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);
         } else {
-            meetingsRepository.addMeeting(new Meeting(meetingsRepository.generateId(), subject, time, roomsRepository.getRoomByName(room), emails));
+            meetingsRepository.addMeeting(new Meeting(id, subject, time, roomsRepository.getRoomByName(room), emails));
             mAddMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.FINISH_ACTIVITY);
         }
-    }
-
-    // Delete selected meeting
-    public void deleteMeeting(@NonNull MeetingViewState meeting){
-        meetingsRepository.deleteMeeting(meeting.getId());
     }
 
     // Calculate resume text to display in view holders

@@ -18,6 +18,8 @@ public class MeetingsRepository {
     private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
     private final List<Meeting> meetingList = new ArrayList<>();
 
+    private int lastGeneratedId = 0;
+
     // Singleton
     public static MeetingsRepository getMeetingsRepositoryInstance() {
         if (MeetingsRepositoryInstance == null) {
@@ -27,27 +29,33 @@ public class MeetingsRepository {
         return MeetingsRepositoryInstance;
     }
 
-    private void updateMeetingListMutableLiveData(){
+    private void updateMeetingListMutableLiveData() {
         meetingListMutableLiveData.setValue(meetingList);
     }
 
     //Initialize meetings repo
     private void setInitialMeetings() {
         meetingList.add(new Meeting(
-                "Mentorat with Nino",
-                "12:30",
-                roomsRepositoryInstance.getRoomByName("Flower"),
-                Arrays.asList(new String[] {"pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com"})));
+            // TODO commenter gérer un id auto incrémental ?,
+            0,
+            "Mentorat with Nino",
+            "12:30",
+            roomsRepositoryInstance.getRoomByName("Flower"),
+            Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com"})));
         meetingList.add(new Meeting(
-                "Code review",
-                "9:30",
-                roomsRepositoryInstance.getRoomByName("Leaf"),
-                Arrays.asList(new String[] {"pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com"})));
+            1,
+            "Code review",
+            "9:30",
+            roomsRepositoryInstance.getRoomByName("Leaf"),
+            Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com"})));
         meetingList.add(new Meeting(
-                "JCVD Interview",
-                "11:00",
-                roomsRepositoryInstance.getRoomByName("Mushroom"),
-                Arrays.asList(new String[] {"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
+            2,
+            "JCVD Interview",
+            "11:00",
+            roomsRepositoryInstance.getRoomByName("Mushroom"),
+            Arrays.asList(new String[]{"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
+
+        lastGeneratedId += 3;
 
         updateMeetingListMutableLiveData();
     }
@@ -56,7 +64,7 @@ public class MeetingsRepository {
         return meetingListMutableLiveData;
     }
 
-    private void initRepo(){
+    private void initRepo() {
         roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
 
         //Dummy meetings generation for dev purpose only
@@ -64,17 +72,28 @@ public class MeetingsRepository {
     }
 
     // Add a new meeting
-    public void addMeeting(@NonNull Meeting meeting){
+    public void addMeeting(@NonNull Meeting meeting) {
         meetingList.add(meeting);
         updateMeetingListMutableLiveData();
     }
 
     // delete selected meeting
     // TODO use meeting id instead
-    public void deleteMeeting(@NonNull Meeting meeting){
-        meetingList.remove(meeting);
+    public void deleteMeeting(int meetingId) {
+        Meeting meetingToDelete = null;
+
+        for (Meeting meeting : meetingList) {
+            if (meeting.getId() == meetingId) {
+                meetingToDelete = meeting;
+                break;
+            }
+        }
+
+        meetingList.remove(meetingToDelete);
         updateMeetingListMutableLiveData();
     }
 
-
+    public int generateId() {
+        return lastGeneratedId++;
+    }
 }

@@ -1,17 +1,14 @@
-package fr.plopez.mareu;
+package fr.plopez.mareu.view.add;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.material.appbar.MaterialToolbar;
-
+import fr.plopez.mareu.R;
 import fr.plopez.mareu.databinding.ActivityAddMeetingBinding;
-import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
-import fr.plopez.mareu.view.AddMeetingActivitySaveListener;
 
-public class AddMeetingActivity extends AppCompatActivity implements AddMeetingActivitySaveListener {
+public class AddMeetingActivity extends AppCompatActivity {
 
     private ActivityAddMeetingBinding activityAddMeetingBinding;
 
@@ -29,7 +26,7 @@ public class AddMeetingActivity extends AppCompatActivity implements AddMeetingA
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.add_meeting_activity_fragment_container, AddMeetingActivityFragment.newInstance(), null)
+                    .add(R.id.add_meeting_activity_fragment_container, AddMeetingFragment.newInstance(), null)
                     .commit();
         }
 
@@ -40,10 +37,5 @@ public class AddMeetingActivity extends AppCompatActivity implements AddMeetingA
             }
         });
 
-    }
-
-    @Override
-    public void onSaveMeeting() {
-        finish();
     }
 }

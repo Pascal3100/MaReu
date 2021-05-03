@@ -1,18 +1,18 @@
 package fr.plopez.mareu.data.model;
 
-import android.util.Log;
-
 import java.util.List;
 
 public class Meeting {
 
-    public String subject;
-    public String startHour;
-    public Room room;
-    public List<String> participantsEmailList;
+    private final int id;
+    private final String subject;
+    private final String startHour;
+    private final Room room;
+    private final List<String> participantsEmailList;
 
     // Constructor
-    public Meeting(String subject, String startHour, Room room, List<String> participantsEmailList) {
+    public Meeting(int id, String subject, String startHour, Room room, List<String> participantsEmailList) {
+        this.id = id;
         this.subject = subject;
         this.startHour = startHour;
         this.room = room;
@@ -20,6 +20,8 @@ public class Meeting {
     }
 
     //Getters
+
+    public int getId() { return id; }
     public String getSubject() {
         return subject;
     }

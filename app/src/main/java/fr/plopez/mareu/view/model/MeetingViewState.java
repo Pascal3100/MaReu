@@ -7,13 +7,11 @@ public class MeetingViewState {
     private final String meetingResume;
     private final String meetingEmails;
     private final int roomDrawableId;
-    private final Meeting meetingObjectRef;
 
     public MeetingViewState(String meetingResume, String meetingEmails, int roomDrawableId, Meeting meetingObjectRef) {
         this.meetingResume = meetingResume;
         this.meetingEmails = meetingEmails;
         this.roomDrawableId = roomDrawableId;
-        this.meetingObjectRef = meetingObjectRef;
     }
 
 
@@ -27,9 +25,5 @@ public class MeetingViewState {
 
     public int getRoomDrawableId() {
         return roomDrawableId;
-    }
-
-    public Meeting getMeetingObjectRef() {
-        return meetingObjectRef;
     }
 }

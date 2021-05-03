@@ -1,20 +1,16 @@
-package fr.plopez.mareu;
+package fr.plopez.mareu.view.add;
 
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -24,69 +20,45 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
 
+import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
-import fr.plopez.mareu.view.AddMeetingActivitySaveListener;
 import fr.plopez.mareu.view.AutoCompleteRoomSelectorMenuAdapter;
 import fr.plopez.mareu.view.CustomToasts;
-import fr.plopez.mareu.view.MainActivityViewModel;
-import fr.plopez.mareu.view.MainActivityViewModelFactory;
+import fr.plopez.mareu.view.ViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddMeetingActivityFragment#newInstance} factory method to
+ * Use the {@link AddMeetingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddMeetingActivityFragment extends Fragment implements View.OnClickListener {
+public class AddMeetingFragment extends Fragment implements View.OnClickListener {
 
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
-    private MainActivityViewModel mainActivityViewModel;
-    private AddMeetingActivitySaveListener saveMeetingListener;
+    private AddMeetingViewModel mAddMeetingViewModel;
 
     private int hour,min;
     private static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
-    public AddMeetingActivityFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      * @return A new instance of fragment AddMeetingActivityFragment.
      */
-    public static AddMeetingActivityFragment newInstance() {
-        AddMeetingActivityFragment fragment = new AddMeetingActivityFragment();
-        return fragment;
+    public static AddMeetingFragment newInstance() {
+        return new AddMeetingFragment();
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof AddMeetingActivitySaveListener) {
-            saveMeetingListener = (AddMeetingActivitySaveListener) context;
-        } else {
-            throw new ClassCastException(context.toString()
-                    + " must implement AddMeetingActivitySaveListener");
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Get an instance of ViewModel
-        mainActivityViewModel = new ViewModelProvider(
+        mAddMeetingViewModel = new ViewModelProvider(
                 this,
-                MainActivityViewModelFactory.getInstance())
-                .get(MainActivityViewModel.class);
+                ViewModelFactory.getInstance())
+                .get(AddMeetingViewModel.class);
 
         // Inflate the layout for this fragment
         fragAddMeetingActBinding = FragmentAddMeetingActivityBinding.inflate(inflater, container, false);
@@ -127,7 +99,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     i++;
                 }
 
-                mainActivityViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
+                mAddMeetingViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
             }
         });
 
@@ -141,21 +113,25 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
         min = time.getCurrentMin();
         updateTimeText();
 
-        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), mainActivityViewModel.getRoomsItems());
+        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), mAddMeetingViewModel.getRoomsItems());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
         // init observer
-        mainActivityViewModel.getMeetingValidationMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                Log.d("TAG", "onChanged: message = "+message);
-                if (message.isEmpty()){
-                    saveMeetingListener.onSaveMeeting();
-                } else {
-                    CustomToasts.showErrorToast(getContext(), message);
+        mAddMeetingViewModel.getAddMeetingViewActionSingleLiveEvent().observe(
+            getViewLifecycleOwner(),
+            action -> {
+                switch (action) {
+                    case FINISH_ACTIVITY:
+                        getActivity().finish();
+                        break;
+                    case DISPLAY_INCORRECT_SUBJECT_MESSAGE:
+                    case DISPLAY_INCORRECT_ROOM_MESSAGE:
+                    case DISPLAY_INCORRECT_EMAIL_MESSAGE:
+                        CustomToasts.showErrorToast(getContext(), action.getMessage());
+                        break;
                 }
             }
-        });
+        );
     }
 
     // Pops timepicker
@@ -195,7 +171,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     LayoutInflater inflater = getLayoutInflater();
                     Chip emailChip = (Chip) inflater.inflate(R.layout.email_chip, null,false);
                     emailChip.setText(v.getText());
-                    emailChip.setOnCloseIconClickListener(AddMeetingActivityFragment.this);
+                    emailChip.setOnCloseIconClickListener(AddMeetingFragment.this);
                     fragAddMeetingActBinding.emailsChipGroup.addView(emailChip);
 
                     // Clears the text edit area
@@ -211,7 +187,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                 }
             } else if (v.getId() == fragAddMeetingActBinding.roomSelectorMenu.getId()) {
 
-                if (!mainActivityViewModel.getRoomsNames().contains(v.getText().toString())){
+                if (!mAddMeetingViewModel.getRoomsNames().contains(v.getText().toString())){
                     CustomToasts.showErrorToast(getContext(), "Select an existing room");
                 }
             }

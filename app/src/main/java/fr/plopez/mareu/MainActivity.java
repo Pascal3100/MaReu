@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import fr.plopez.mareu.view.MainActivityFabOnClickListener;
+import fr.plopez.mareu.view.add.AddMeetingActivity;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFabOnClickListener {
 
