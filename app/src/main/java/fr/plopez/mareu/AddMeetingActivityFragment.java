@@ -26,6 +26,7 @@ import java.util.Locale;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
 import fr.plopez.mareu.view.AddMeetingActivitySaveListener;
+import fr.plopez.mareu.view.AutoCompleteRoomSelectorMenuAdapter;
 import fr.plopez.mareu.view.CustomToasts;
 import fr.plopez.mareu.view.MainActivityViewModel;
 import fr.plopez.mareu.view.MainActivityViewModelFactory;
@@ -114,18 +115,6 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                 String time = fragAddMeetingActBinding.timePickerText.getText().toString();
                 int nbEmails = fragAddMeetingActBinding.emailsChipGroup.getChildCount();
 
-                //Check if all the fields are correctly filled
-                if (subject.isEmpty()) {
-                    CustomToasts.showErrorToast(getContext(), "Enter a correct subject");
-                    return;
-                } else if (selectedRoom.isEmpty() || !mainActivityViewModel.getRoomsNames().contains(selectedRoom)) {
-                    CustomToasts.showErrorToast(getContext(), "Enter a correct room");
-                    return;
-                } else if (nbEmails == 0) {
-                    CustomToasts.showErrorToast(getContext(), "Enter at least one email");
-                    return;
-                }
-
                 // Get all the emails in chips
                 int i = 0;
                 List<String> emails = new ArrayList<>();
@@ -135,9 +124,13 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     i++;
                 }
 
-                mainActivityViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
+                String message = mainActivityViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
 
-                saveMeetingListener.onSaveMeeting();
+                if (message == null){
+                    saveMeetingListener.onSaveMeeting();
+                } else {
+                    CustomToasts.showErrorToast(getContext(), message);
+                };
             }
         });
 
@@ -145,14 +138,20 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
     }
 
     private void init(){
+        // Initializing current time display
         Time time = new Time();
         hour = time.getCurrentHour();
         min = time.getCurrentMin();
         updateTimeText();
 
-        List<String> items = mainActivityViewModel.getRoomsNames();
-        ArrayAdapter adapter = new ArrayAdapter(requireContext(),R.layout.drop_down_item, items);
+        // Initializing room selector
+        // List<String> items = mainActivityViewModel.getRoomsNames();
+        // ArrayAdapter adapter = new ArrayAdapter(requireContext(),R.layout.drop_down_item, items);
+
+        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), mainActivityViewModel.getRoomsItems());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
+
+
     }
 
     // Pops timepicker

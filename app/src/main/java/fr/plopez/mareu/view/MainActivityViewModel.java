@@ -16,6 +16,8 @@ import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Room;
+import fr.plopez.mareu.utils.SingleLiveEvent;
+import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
 import static android.content.ContentValues.TAG;
@@ -26,6 +28,7 @@ public class MainActivityViewModel extends ViewModel {
     private final String EMAIL_SEPARATOR = ", ";
 
     private final LiveData<List<Meeting>> meetingsLiveData;
+    private SingleLiveEvent<String> meetingValidationMessage = new SingleLiveEvent<>();
     private MeetingsRepository meetingsRepository;
     private RoomsRepository roomsRepository;
 
@@ -33,6 +36,10 @@ public class MainActivityViewModel extends ViewModel {
         this.meetingsRepository = meetingsRepository;
         this.roomsRepository = roomsRepository;
         meetingsLiveData = meetingsRepository.getMeetings();
+    }
+
+    public SingleLiveEvent<String> getMeetingValidationMessage(){
+        return meetingValidationMessage;
     }
 
     public LiveData<List<MeetingViewState>> getMainActivityViewStatesLiveData() {
@@ -58,7 +65,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     // Add a new meeting
-    public void addMeeting(@Nullable String subject,
+    public String addMeeting(@Nullable String subject,
                            @NonNull String time,
                            @Nullable String room,
                            @Nullable List<String> emails,
@@ -66,17 +73,21 @@ public class MainActivityViewModel extends ViewModel {
 
         //Check if all the fields are correctly filled
         if (subject.isEmpty()) {
-            // CustomToasts.showErrorToast(getContext(), "Enter a correct subject");
-            return;
+            // return new String("Enter a correct subject");
+            meetingValidationMessage.setValue("Enter a correct subject");
         } else if (room.isEmpty() || !roomsRepository.getRoomsNames().contains(room)) {
-            // CustomToasts.showErrorToast(getContext(), "Enter a correct room");
-            return;
+            // return new String("Enter a correct room");
+            meetingValidationMessage.setValue("Enter a correct room");
         } else if (nbEmails == 0) {
-            // CustomToasts.showErrorToast(getContext(), "Enter at least one email");
-            return;
+            // return new String("Enter at least one email");
+            meetingValidationMessage.setValue("Enter at least one email");
+        } else {
+            meetingValidationMessage.setValue(null);
         }
 
         meetingsRepository.addMeeting(new Meeting(subject, time, roomsRepository.getRoomByName(room), emails));
+
+        return null;
     }
 
     // Delete selected meeting
@@ -102,5 +113,16 @@ public class MainActivityViewModel extends ViewModel {
     // Provides rooms names
     public List<String> getRoomsNames() {
         return roomsRepository.getRoomsNames();
+    }
+
+    // Provides rooms items list
+    public List<MeetingRoomItem> getRoomsItems() {
+        ArrayList<MeetingRoomItem> roomsItemsList = new ArrayList<>();
+
+        for (String roomName:roomsRepository.getRoomsNames()){
+            roomsItemsList.add(new MeetingRoomItem(roomName, roomsRepository.getRoomByName(roomName).getRoomId()));
+        }
+
+        return roomsItemsList;
     }
 }
