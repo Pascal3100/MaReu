@@ -65,29 +65,23 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     // Add a new meeting
-    public String addMeeting(@Nullable String subject,
+    public void addMeeting(@Nullable String subject,
                            @NonNull String time,
                            @Nullable String room,
                            @Nullable List<String> emails,
                            int nbEmails){
 
-        //Check if all the fields are correctly filled
+        // Check if all the fields are correctly filled
         if (subject.isEmpty()) {
-            // return new String("Enter a correct subject");
             meetingValidationMessage.setValue("Enter a correct subject");
         } else if (room.isEmpty() || !roomsRepository.getRoomsNames().contains(room)) {
-            // return new String("Enter a correct room");
             meetingValidationMessage.setValue("Enter a correct room");
         } else if (nbEmails == 0) {
-            // return new String("Enter at least one email");
             meetingValidationMessage.setValue("Enter at least one email");
         } else {
             meetingValidationMessage.setValue(null);
+            meetingsRepository.addMeeting(new Meeting(subject, time, roomsRepository.getRoomByName(room), emails));
         }
-
-        meetingsRepository.addMeeting(new Meeting(subject, time, roomsRepository.getRoomByName(room), emails));
-
-        return null;
     }
 
     // Delete selected meeting

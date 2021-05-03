@@ -6,8 +6,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Observable;
 
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
@@ -124,13 +127,7 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
                     i++;
                 }
 
-                String message = mainActivityViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
-
-                if (message == null){
-                    saveMeetingListener.onSaveMeeting();
-                } else {
-                    CustomToasts.showErrorToast(getContext(), message);
-                };
+                mainActivityViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
             }
         });
 
@@ -144,14 +141,21 @@ public class AddMeetingActivityFragment extends Fragment implements View.OnClick
         min = time.getCurrentMin();
         updateTimeText();
 
-        // Initializing room selector
-        // List<String> items = mainActivityViewModel.getRoomsNames();
-        // ArrayAdapter adapter = new ArrayAdapter(requireContext(),R.layout.drop_down_item, items);
-
         AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), mainActivityViewModel.getRoomsItems());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
-
+        // init observer
+        mainActivityViewModel.getMeetingValidationMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String message) {
+                Log.d("TAG", "onChanged: message = "+message);
+                if (message.isEmpty()){
+                    saveMeetingListener.onSaveMeeting();
+                } else {
+                    CustomToasts.showErrorToast(getContext(), message);
+                }
+            }
+        });
     }
 
     // Pops timepicker
