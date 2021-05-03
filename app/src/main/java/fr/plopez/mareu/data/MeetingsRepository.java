@@ -55,7 +55,7 @@ public class MeetingsRepository {
             roomsRepositoryInstance.getRoomByName("Mushroom"),
             Arrays.asList(new String[]{"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
 
-        lastGeneratedId += 3;
+        lastGeneratedId += 2;
 
         updateMeetingListMutableLiveData();
     }

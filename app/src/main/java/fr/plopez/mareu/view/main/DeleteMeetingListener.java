@@ -1,4 +1,4 @@
-package fr.plopez.mareu.view;
+package fr.plopez.mareu.view.main;
 
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.view.model.MeetingViewState;

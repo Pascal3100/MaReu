@@ -1,4 +1,4 @@
-package fr.plopez.mareu.view;
+package fr.plopez.mareu.view.main;
 
 import android.view.View;
 import android.widget.ImageView;

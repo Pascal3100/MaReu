@@ -24,8 +24,8 @@ import java.util.Locale;
 import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
-import fr.plopez.mareu.view.AutoCompleteRoomSelectorMenuAdapter;
-import fr.plopez.mareu.view.CustomToasts;
+import fr.plopez.mareu.view.view_utils.AutoCompleteRoomSelectorMenuAdapter;
+import fr.plopez.mareu.view.view_utils.CustomToasts;
 import fr.plopez.mareu.view.ViewModelFactory;
 
 /**
@@ -36,7 +36,7 @@ import fr.plopez.mareu.view.ViewModelFactory;
 public class AddMeetingFragment extends Fragment implements View.OnClickListener {
 
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
-    private AddMeetingViewModel mAddMeetingViewModel;
+    private AddMeetingViewModel addMeetingViewModel;
 
     private int hour,min;
     private static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -55,7 +55,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
 
         // Get an instance of ViewModel
-        mAddMeetingViewModel = new ViewModelProvider(
+        addMeetingViewModel = new ViewModelProvider(
                 this,
                 ViewModelFactory.getInstance())
                 .get(AddMeetingViewModel.class);
@@ -99,7 +99,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                     i++;
                 }
 
-                mAddMeetingViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
+                addMeetingViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
             }
         });
 
@@ -113,11 +113,11 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         min = time.getCurrentMin();
         updateTimeText();
 
-        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), mAddMeetingViewModel.getRoomsItems());
+        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), addMeetingViewModel.getRoomsItems());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
         // init observer
-        mAddMeetingViewModel.getAddMeetingViewActionSingleLiveEvent().observe(
+        addMeetingViewModel.getAddMeetingViewActionSingleLiveEvent().observe(
             getViewLifecycleOwner(),
             action -> {
                 switch (action) {
@@ -187,7 +187,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                 }
             } else if (v.getId() == fragAddMeetingActBinding.roomSelectorMenu.getId()) {
 
-                if (!mAddMeetingViewModel.getRoomsNames().contains(v.getText().toString())){
+                if (!addMeetingViewModel.getRoomsNames().contains(v.getText().toString())){
                     CustomToasts.showErrorToast(getContext(), "Select an existing room");
                 }
             }
@@ -200,7 +200,6 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
     public void onDestroyView() {
         super.onDestroyView();
         fragAddMeetingActBinding = null;
-        // TODO detruire l'objet meeting 
     }
 
     // On Click on chip delete button

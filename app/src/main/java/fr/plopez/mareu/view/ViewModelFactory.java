@@ -4,12 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.view.add.AddMeetingViewModel;
+import fr.plopez.mareu.view.main.MainActivityViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -34,7 +32,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainActivityViewModel.class)) {
-            return (T) new MainActivityViewModel(meetingsRepository, roomsRepository);
+            return (T) new MainActivityViewModel(meetingsRepository);
         } else if (modelClass.isAssignableFrom(AddMeetingViewModel.class)) {
             return (T) new AddMeetingViewModel(meetingsRepository, roomsRepository);
         }

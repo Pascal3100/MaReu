@@ -1,4 +1,4 @@
-package fr.plopez.mareu;
+package fr.plopez.mareu.view.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,9 +17,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import fr.plopez.mareu.databinding.MainActivityFragmentBinding;
-import fr.plopez.mareu.view.DeleteMeetingListener;
-import fr.plopez.mareu.view.MainActivityFabOnClickListener;
-import fr.plopez.mareu.view.MainActivityFragmentRecyclerViewAdapter;
 import fr.plopez.mareu.view.add.AddMeetingViewModel;
 import fr.plopez.mareu.view.ViewModelFactory;
 import fr.plopez.mareu.view.model.MeetingViewState;
@@ -31,10 +28,10 @@ import fr.plopez.mareu.view.model.MeetingViewState;
  */
 public class MainActivityFragment extends Fragment implements DeleteMeetingListener {
 
-    private static final String TAG = "MainActivityFragment";
+    private static final String TAG = "AddMeetingActivityFragment";
 
     private MainActivityFragmentRecyclerViewAdapter adapter;
-    private AddMeetingViewModel viewModel;
+    private MainActivityViewModel mainActivityViewModel;
 
     private MainActivityFragmentBinding mainActivityFragmentBinding;
 
@@ -69,14 +66,14 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewModel = new ViewModelProvider(
+        mainActivityViewModel = new ViewModelProvider(
                 this,
                 ViewModelFactory.getInstance())
-                    .get(AddMeetingViewModel.class);
+                    .get(MainActivityViewModel.class);
 
         adapter = new MainActivityFragmentRecyclerViewAdapter((DeleteMeetingListener) this);
 
-        viewModel.getMainActivityViewStatesLiveData().observe(this, new Observer<List<MeetingViewState>>() {
+        mainActivityViewModel.getMainActivityViewStatesLiveData().observe(this, new Observer<List<MeetingViewState>>() {
             @Override
             public void onChanged(List<MeetingViewState> meetingViewStates) {
                 adapter.submitList(meetingViewStates);
@@ -85,7 +82,7 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivityFragmentBinding = MainActivityFragmentBinding.inflate(inflater, container, false);
         View view = mainActivityFragmentBinding.getRoot();
@@ -121,7 +118,7 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
 
     @Override
     public void onClickDeleteMeetingListener(MeetingViewState meeting) {
-        viewModel.deleteMeeting(meeting);
+        mainActivityViewModel.deleteMeeting(meeting);
         // viewModel.addMeeting("JOJO", "12:00", "star", Arrays.asList("toto@gmail.com","jojo@expleo.com"), 2);
     }
 }

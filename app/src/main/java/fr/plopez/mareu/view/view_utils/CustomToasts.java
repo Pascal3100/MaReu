@@ -1,4 +1,4 @@
-package fr.plopez.mareu.view;
+package fr.plopez.mareu.view.view_utils;
 
 import android.content.Context;
 import android.widget.Toast;

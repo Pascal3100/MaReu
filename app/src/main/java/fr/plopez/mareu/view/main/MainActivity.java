@@ -1,11 +1,11 @@
-package fr.plopez.mareu;
+package fr.plopez.mareu.view.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import fr.plopez.mareu.view.MainActivityFabOnClickListener;
+import fr.plopez.mareu.R;
 import fr.plopez.mareu.view.add.AddMeetingActivity;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFabOnClickListener {

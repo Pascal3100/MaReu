@@ -1,4 +1,4 @@
-package fr.plopez.mareu.view;
+package fr.plopez.mareu.view.main;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import fr.plopez.mareu.R;
-import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MainActivityFragmentRecyclerViewViewHolder> {
