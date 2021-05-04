@@ -47,8 +47,7 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
      * @return A new instance of fragment MainActivityFragment.
      */
     public static MainActivityFragment newInstance() {
-        MainActivityFragment fragment = new MainActivityFragment();
-        return fragment;
+       return new MainActivityFragment();
     }
 
     @Override
@@ -93,6 +92,7 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
                 fabOnClickListener.onClickListener();
             }
         });
+
 
         // Inflate the layout for this fragment
         return view;

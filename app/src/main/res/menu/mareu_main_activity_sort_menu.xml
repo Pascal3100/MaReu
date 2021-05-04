@@ -1,9 +1,14 @@
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/sortByRoom"
-        android:title="@string/sortByRoom"/>
+        android:id="@+id/sort_meetings"
+        android:title="@string/sortByRoom"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        android:iconTint="@color/whiteGrey"
+        app:showAsAction="always"/>
+<!--
     <item
         android:id="@+id/sortByTime"
         android:title="@string/sortByTime"/>
+-->
 </menu>

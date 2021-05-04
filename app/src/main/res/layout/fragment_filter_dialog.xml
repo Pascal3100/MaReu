@@ -1,36 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".FilterDialogFragment">
+    android:layout_height="wrap_content"
+    tools:context=".view.main.filter_fragment_dialog.MainActivityFilterDialogFragment">
+
+
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_banner_fragment_dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/room_filter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Room filter"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/room_filter"
+        app:layout_constraintStart_toStartOf="@+id/room_filter"
+        app:layout_constraintTop_toBottomOf="@+id/banner">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/time_filter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/time_filter"
+        app:layout_constraintStart_toStartOf="@+id/time_filter"
+        app:layout_constraintTop_toBottomOf="@+id/banner"
+        tools:text="Time filter">
+
+    </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/room_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@id/time_filter"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_filter_label">
 
     </androidx.recyclerview.widget.RecyclerView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/time_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/room_filter"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toEndOf="@id/room_filter"
+        app:layout_constraintTop_toBottomOf="@id/time_filter_label">
 
     </androidx.recyclerview.widget.RecyclerView>
+
     <TextView
+        android:id="@+id/filter_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="italic"
         app:layout_constraintTop_toBottomOf="@+id/room_filter"
-        >
+        tools:text="5 Meetings were found">
 
     </TextView>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:text="Filter"
+        android:textSize="16sp"
+        app:cornerRadius="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_text">
+
+    </com.google.android.material.button.MaterialButton>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

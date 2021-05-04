@@ -10,22 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.data.MeetingsRepository;
+import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityViewModel extends ViewModel {
 
-    private static final String TAG = "MainActivityFragment";
+    private static final String TAG = "MainActivityViewModel";
 
     private static final String RESUME_SEPARATOR = " - ";
     private static final String EMAIL_SEPARATOR = ", ";
 
     private final MeetingsRepository meetingsRepository;
+    private final RoomsRepository roomsRepository;
 
     private final LiveData<List<Meeting>> meetingsLiveData;
 
-    public MainActivityViewModel(MeetingsRepository meetingsRepository){
+    public MainActivityViewModel(MeetingsRepository meetingsRepository, RoomsRepository roomsRepository){
         this.meetingsRepository = meetingsRepository;
+        this.roomsRepository = roomsRepository;
         meetingsLiveData = meetingsRepository.getMeetings();
     }
 
@@ -67,5 +71,15 @@ public class MainActivityViewModel extends ViewModel {
             emails = emails.concat(email + EMAIL_SEPARATOR);
         }
         return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
+    }
+    // Provides rooms items list
+    public List<MeetingRoomItem> getRoomsItems() {
+        ArrayList<MeetingRoomItem> roomsItemsList = new ArrayList<>();
+
+        for (String roomName:roomsRepository.getRoomsNames()){
+            roomsItemsList.add(new MeetingRoomItem(roomName, roomsRepository.getRoomByName(roomName).getRoomId()));
+        }
+
+        return roomsItemsList;
     }
 }
