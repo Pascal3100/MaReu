@@ -17,6 +17,8 @@ import android.widget.TimePicker;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -111,6 +113,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         Time time = new Time();
         hour = time.getCurrentHour();
         min = time.getCurrentMin();
+
         updateTimeText();
 
         AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), addMeetingViewModel.getRoomsItems());

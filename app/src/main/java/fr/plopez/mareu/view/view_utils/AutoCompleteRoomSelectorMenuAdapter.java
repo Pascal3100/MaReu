@@ -13,9 +13,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.plopez.mareu.R;
 import fr.plopez.mareu.databinding.DropDownItemBinding;
-import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 
 public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoomItem> {

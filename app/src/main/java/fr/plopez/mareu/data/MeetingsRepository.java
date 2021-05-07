@@ -18,6 +18,7 @@ public class MeetingsRepository {
     private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
     private final List<Meeting> meetingList = new ArrayList<>();
 
+
     private int lastGeneratedId = 0;
 
     // Singleton
@@ -36,26 +37,23 @@ public class MeetingsRepository {
     //Initialize meetings repo
     private void setInitialMeetings() {
         meetingList.add(new Meeting(
-            // TODO commenter gérer un id auto incrémental ?,
-            0,
+                lastGeneratedId++,
             "Mentorat with Nino",
             "12:30",
             roomsRepositoryInstance.getRoomByName("Flower"),
             Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com"})));
         meetingList.add(new Meeting(
-            1,
+                lastGeneratedId++,
             "Code review",
             "9:30",
             roomsRepositoryInstance.getRoomByName("Leaf"),
             Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com"})));
         meetingList.add(new Meeting(
-            2,
+                lastGeneratedId++,
             "JCVD Interview",
             "11:00",
             roomsRepositoryInstance.getRoomByName("Mushroom"),
             Arrays.asList(new String[]{"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
-
-        lastGeneratedId += 2;
 
         updateMeetingListMutableLiveData();
     }
