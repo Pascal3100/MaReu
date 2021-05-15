@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.data.MeetingsRepository;
+import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.utils.SingleLiveEvent;
@@ -16,13 +17,14 @@ import fr.plopez.mareu.view.model.MeetingRoomItem;
 public class AddMeetingViewModel extends ViewModel {
 
     private final MeetingsRepository meetingsRepository;
-    private final RoomsRepository roomsRepository;
+    private final RoomFilterRepository roomFilterRepository;
 
     private final SingleLiveEvent<AddMeetingViewAction> addMeetingViewActionSingleLiveEvent = new SingleLiveEvent<>();
 
-    public AddMeetingViewModel(MeetingsRepository meetingsRepository, RoomsRepository roomsRepository){
+    public AddMeetingViewModel(MeetingsRepository meetingsRepository,
+                               RoomFilterRepository roomFilterRepository){
         this.meetingsRepository = meetingsRepository;
-        this.roomsRepository = roomsRepository;
+        this.roomFilterRepository = roomFilterRepository;
     }
 
     public SingleLiveEvent<AddMeetingViewAction> getAddMeetingViewActionSingleLiveEvent(){
@@ -39,29 +41,23 @@ public class AddMeetingViewModel extends ViewModel {
         // Check if all the fields are correctly filled
         if (subject.isEmpty()) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_SUBJECT_MESSAGE);
-        } else if (room.isEmpty() || !roomsRepository.getRoomsNames().contains(room)) {
+        } else if (room.isEmpty() || !roomFilterRepository.getRoomsNames().contains(room)) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_ROOM_MESSAGE);
         } else if (nbEmails == 0) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);
         } else {
-            meetingsRepository.addMeeting(new Meeting(meetingsRepository.generateId(), subject, time, roomsRepository.getRoomByName(room), emails));
+            meetingsRepository.addMeeting(new Meeting(meetingsRepository.generateId(), subject, time, roomFilterRepository.getRoomByName(room), emails));
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.FINISH_ACTIVITY);
         }
     }
 
     // Provides rooms names
     public List<String> getRoomsNames() {
-        return roomsRepository.getRoomsNames();
+        return roomFilterRepository.getRoomsNames();
     }
 
     // Provides rooms items list
-    public List<MeetingRoomItem> getRoomsItems() {
-        ArrayList<MeetingRoomItem> roomsItemsList = new ArrayList<>();
-
-        for (String roomName:roomsRepository.getRoomsNames()){
-            roomsItemsList.add(new MeetingRoomItem(roomName, roomsRepository.getRoomByName(roomName).getRoomId()));
-        }
-
-        return roomsItemsList;
+    public List<MeetingRoomItem> getMeetingRoomItemList(){
+        return roomFilterRepository.getMeetingRoomItemListLiveData().getValue();
     }
 }

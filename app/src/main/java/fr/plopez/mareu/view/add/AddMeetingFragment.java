@@ -22,6 +22,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
@@ -116,7 +117,9 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
-        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(getContext(), addMeetingViewModel.getRoomsItems());
+        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(
+                Objects.requireNonNull(getContext()),
+                addMeetingViewModel.getMeetingRoomItemList());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
         // init observer
@@ -164,7 +167,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         fragAddMeetingActBinding.timePickerText.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, min));
     }
 
-    private TextInputEditText.OnEditorActionListener textListener = new TextInputEditText.OnEditorActionListener() {
+    private final TextInputEditText.OnEditorActionListener textListener = new TextInputEditText.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (v.getId() == fragAddMeetingActBinding.emailInputContent.getId()){

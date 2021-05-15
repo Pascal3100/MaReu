@@ -76,7 +76,6 @@ public class MeetingsRepository {
     }
 
     // delete selected meeting
-    // TODO use meeting id instead
     public void deleteMeeting(int meetingId) {
         Meeting meetingToDelete = null;
 

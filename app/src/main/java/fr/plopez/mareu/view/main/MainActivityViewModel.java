@@ -3,6 +3,7 @@ package fr.plopez.mareu.view.main;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.data.MeetingsRepository;
+import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.RoomsRepository;
+import fr.plopez.mareu.data.TimeFilterRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.utils.TimeGen;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
@@ -30,24 +33,27 @@ public class MainActivityViewModel extends ViewModel {
     private static final String EMAIL_SEPARATOR = ", ";
 
     private final MeetingsRepository meetingsRepository;
-    private final RoomsRepository roomsRepository;
-
-    private final LiveData<List<Meeting>> meetingsLiveData;
-
-    private final MutableLiveData<List<MeetingRoomItem>> roomFilterLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<MeetingTimeItem>> timeFilterLiveData = new MutableLiveData<>();
+    private final RoomFilterRepository roomFilterRepository;
+    private final TimeFilterRepository timeFilterRepository;
 
     private final MediatorLiveData<List<Meeting>> filteredMeetingListMediatorLiveData = new MediatorLiveData<>();
 
-    public MainActivityViewModel(MeetingsRepository meetingsRepository, RoomsRepository roomsRepository) {
+    public MainActivityViewModel(MeetingsRepository meetingsRepository,
+                                 RoomFilterRepository roomFilterRepository,
+                                 TimeFilterRepository timeFilterRepository) {
         this.meetingsRepository = meetingsRepository;
-        this.roomsRepository = roomsRepository;
-        meetingsLiveData = meetingsRepository.getMeetings();
+        this.roomFilterRepository = roomFilterRepository;
+        this.timeFilterRepository = timeFilterRepository;
+
+        LiveData<List<Meeting>> meetingsLiveData = meetingsRepository.getMeetings();
+        LiveData<List<MeetingRoomItem>> roomFilterLiveData = roomFilterRepository.getMeetingRoomItemListLiveData();
+        LiveData<List<MeetingTimeItem>> timeFilterLiveData = timeFilterRepository.getMeetingTimeItemListLiveData();
 
         // Add meeting list to mediatorLiveData
         filteredMeetingListMediatorLiveData.addSource(meetingsLiveData, new Observer<List<Meeting>>() {
             @Override
             public void onChanged(List<Meeting> meetingsLiveData) {
+                Log.d(TAG, "---------- onChanged: meetingsLiveData has changed");
                 combine(meetingsLiveData, roomFilterLiveData.getValue(), timeFilterLiveData.getValue());
             }
         });
@@ -56,6 +62,7 @@ public class MainActivityViewModel extends ViewModel {
         filteredMeetingListMediatorLiveData.addSource(roomFilterLiveData, new Observer<List<MeetingRoomItem>>() {
             @Override
             public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
+                Log.d(TAG, "---------- onChanged: roomFilterLiveData has changed");
                 combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue());
             }
         });
@@ -64,35 +71,40 @@ public class MainActivityViewModel extends ViewModel {
         filteredMeetingListMediatorLiveData.addSource(timeFilterLiveData, new Observer<List<MeetingTimeItem>>() {
             @Override
             public void onChanged(List<MeetingTimeItem> meetingTimeItemList) {
+                Log.d(TAG, "---------- onChanged: timeFilterLiveData has changed");
                 combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList);
             }
         });
     }
 
-    private void combine(List<Meeting> meetingsList,
-                         List<MeetingRoomItem> meetingRoomItemList,
-                         List<MeetingTimeItem> meetingTimeItemList) {
+    private void combine(@Nullable List<Meeting> meetingsList,
+                         @Nullable List<MeetingRoomItem> meetingRoomItemList,
+                         @Nullable List<MeetingTimeItem> meetingTimeItemList) {
 
-        List<Meeting> filteredMeetingsList = new ArrayList<>(meetingsList);
+        List<Meeting> filteredMeetingsList;
 
         // Exclusion management
         if (meetingsList.size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
-            filteredMeetingListMediatorLiveData.setValue(filteredMeetingsList);
-            Log.d(TAG, " -------   -------  combine: nop");
+            filteredMeetingListMediatorLiveData.setValue(meetingsList);
             return;
+        } else {
+            filteredMeetingsList = new ArrayList<>(meetingsList);
         }
+
+        List<Meeting> meetingsToNotKeep = new ArrayList<>();
 
         // Filter by room name
         List<String> roomsFilter = new ArrayList<>();
         for (MeetingRoomItem meetingRoomItem : meetingRoomItemList) {
             if (meetingRoomItem.isChecked()) {
-                roomsFilter.add(meetingRoomItem.getRoomName());
+                roomsFilter.add(meetingRoomItem.getRoomName().toLowerCase());
             }
         }
-        Log.d(TAG, "combine: room filter = " + roomsFilter.toString());
-        for (Meeting meeting : filteredMeetingsList) {
-            if (!roomsFilter.contains(meeting.getRoom().getName())) {
-                filteredMeetingsList.remove(meeting);
+        if (roomsFilter.size() > 0) {
+            for (Meeting meeting : filteredMeetingsList) {
+                if (!roomsFilter.contains(meeting.getRoom().getName().toLowerCase())) {
+                    meetingsToNotKeep.add(meeting);
+                }
             }
         }
         // Filter by time hour
@@ -102,10 +114,16 @@ public class MainActivityViewModel extends ViewModel {
                 timeFilter.add(meetingTimeItem.getHour());
             }
         }
-        for (Meeting meeting : filteredMeetingsList) {
-            if (!timeFilter.contains(meeting.getStartHour().split(":")[0])) {
-                filteredMeetingsList.remove(meeting);
+        if (timeFilter.size() > 0) {
+            for (Meeting meeting : filteredMeetingsList) {
+                if (!timeFilter.contains(meeting.getStartHour().split(":")[0])) {
+                    meetingsToNotKeep.add(meeting);
+                }
             }
+        }
+        // Delete all filtered meetings
+        for (Meeting meeting : meetingsToNotKeep) {
+            filteredMeetingsList.remove(meeting);
         }
 
         filteredMeetingListMediatorLiveData.setValue(filteredMeetingsList);
@@ -151,22 +169,31 @@ public class MainActivityViewModel extends ViewModel {
         return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
     }
 
-    // Provides rooms items list
-    public List<MeetingRoomItem> getRoomsItems() {
-        ArrayList<MeetingRoomItem> roomsItemsList = new ArrayList<>();
-
-        for (String roomName : roomsRepository.getRoomsNames()) {
-            roomsItemsList.add(new MeetingRoomItem(roomName, roomsRepository.getRoomByName(roomName).getRoomId()));
-        }
-
-        return roomsItemsList;
-    }
 
     public void updateRoomFilter(List<MeetingRoomItem> meetingRoomItemList) {
-        roomFilterLiveData.setValue(meetingRoomItemList);
+/*        Log.d(TAG, "--------- updateRoomFilter: --------- ");
+        for (MeetingRoomItem m:meetingRoomItemList){
+            Log.d(TAG, "        --> "+m.getRoomName()+" -- "+m.isChecked());
+        }
+*/
+        roomFilterRepository.updateMeetingRoomItemList(meetingRoomItemList);
     }
 
     public void updateTimeFilter(List<MeetingTimeItem> meetingTimeItemList) {
-        timeFilterLiveData.setValue(meetingTimeItemList);
+/*
+        Log.d(TAG, "--------- updateTimeFilter: --------- ");
+        for (MeetingTimeItem m:meetingTimeItemList){
+            Log.d(TAG, "        --> "+m.getTime()+" -- "+m.isChecked());
+        }
+*/
+        timeFilterRepository.updateMeetingTimeItemList(meetingTimeItemList);
+    }
+
+    public List<MeetingRoomItem> getMeetingRoomItemList() {
+        return roomFilterRepository.getMeetingRoomItemListLiveData().getValue();
+    }
+
+    public List<MeetingTimeItem> getMeetingTimeItemList() {
+        return timeFilterRepository.getMeetingTimeItemListLiveData().getValue();
     }
 }

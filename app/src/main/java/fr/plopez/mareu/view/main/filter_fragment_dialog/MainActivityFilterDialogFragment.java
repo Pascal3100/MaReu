@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import fr.plopez.mareu.databinding.FragmentFilterDialogBinding;
 import fr.plopez.mareu.utils.TimeGen;
@@ -64,7 +65,9 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
         LinearLayoutManager roomFilterLinearLayoutManager = new LinearLayoutManager(getContext());
         roomFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragmentFilterDialogBinding.roomFilter.setLayoutManager(roomFilterLinearLayoutManager);
-        fragmentFilterDialogBinding.roomFilter.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        fragmentFilterDialogBinding.roomFilter.addItemDecoration(
+                new DividerItemDecoration(Objects.requireNonNull(getContext()),
+                DividerItemDecoration.HORIZONTAL));
 
         LinearLayoutManager timeFilterLinearLayoutManager = new LinearLayoutManager(getContext());
         timeFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -81,13 +84,13 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
 
         fragmentFilterDialogBinding.roomFilter.setAdapter(
                 new MainActivityFilterDialogRoomRecyclerViewAdapter(
-                        mainActivityViewModel.getRoomsItems(),
+                        mainActivityViewModel.getMeetingRoomItemList(),
                         onModifyFilters
                 )
         );
         fragmentFilterDialogBinding.timeFilter.setAdapter(
                 new MainActivityFilterDialogTimeRecyclerViewAdapter(
-                        TimeGen.getAvailableTimes(8, 18),
+                        mainActivityViewModel.getMeetingTimeItemList(),
                         onModifyFilters
                 )
         );
