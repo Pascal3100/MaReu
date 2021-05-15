@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/toast_drawable"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/custom_toast_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingHorizontal="36dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/whiteGrey"
+        android:textSize="14sp"
+        tools:text="select a valid room">
+
+    </TextView>
+
+</LinearLayout>

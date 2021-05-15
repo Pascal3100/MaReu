@@ -75,6 +75,13 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
 
         //TODO: implementer l'observer pour la mise à jour du texte (nb de meetings trouvés avec les filtres en cours)
 
+        fragmentFilterDialogBinding.closeFilterDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         return fragmentFilterDialogBinding.getRoot();
     }
 

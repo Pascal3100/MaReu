@@ -3,6 +3,8 @@ package fr.plopez.mareu.view.add;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 
 import fr.plopez.mareu.R;
@@ -15,9 +17,6 @@ public class AddMeetingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_add_meeting);
-        // MaterialToolbar topAppBar = findViewById(R.id.add_meeting_activity_app_bar);
-
         activityAddMeetingBinding = ActivityAddMeetingBinding.inflate(getLayoutInflater());
         View view = activityAddMeetingBinding.getRoot();
         setContentView(view);
@@ -30,6 +29,9 @@ public class AddMeetingActivity extends AppCompatActivity {
                     .commit();
         }
 
+        // Clear the filter menu because not needed in this view.
+        activityAddMeetingBinding.addMeetingActivityAppBar.getMenu().clear();
+
         activityAddMeetingBinding.addMeetingActivityAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,4 +40,5 @@ public class AddMeetingActivity extends AppCompatActivity {
         });
 
     }
+
 }
