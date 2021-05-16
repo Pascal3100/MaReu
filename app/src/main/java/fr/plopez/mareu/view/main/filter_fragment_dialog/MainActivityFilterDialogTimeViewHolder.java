@@ -11,8 +11,8 @@ import fr.plopez.mareu.R;
 
 public class MainActivityFilterDialogTimeViewHolder  extends RecyclerView.ViewHolder {
 
-    public TextView timeText;
-    public CheckBox timeCheckBox;
+    public final TextView timeText;
+    public final CheckBox timeCheckBox;
 
     public MainActivityFilterDialogTimeViewHolder(@NonNull View itemView) {
         super(itemView);

@@ -16,7 +16,7 @@ public class RoomFilterRepository {
     private static RoomFilterRepository roomFilterRepositoryInstance;
     private static RoomsRepository roomsRepositoryInstance;
     private static List<MeetingRoomItem> meetingRoomItemsList;
-    private static MutableLiveData<List<MeetingRoomItem>> meetingRoomItemListMutableLiveData = new MutableLiveData<>();
+    private static final MutableLiveData<List<MeetingRoomItem>> meetingRoomItemListMutableLiveData = new MutableLiveData<>();
 
     // Singleton
     public static RoomFilterRepository getRoomFilterRepositoryInstance() {

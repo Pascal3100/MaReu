@@ -22,7 +22,7 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     private DropDownItemBinding dropDownItemBinding;
 
     // Saves the list of items because of the filtering operations
-    private List<MeetingRoomItem> meetingRoomItemListFull;
+    private final List<MeetingRoomItem> meetingRoomItemListFull;
 
     public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context, @NonNull List<MeetingRoomItem> meetingRoomItemList) {
         super(context, resource, meetingRoomItemList);
@@ -60,7 +60,7 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
         return convertView;
     }
 
-    private Filter roomsFilter = new Filter() {
+    private final Filter roomsFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filteredRoomsResult = new FilterResults();
@@ -74,8 +74,8 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
                 // Making some formatting operations on the filter pattern
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (MeetingRoomItem item: meetingRoomItemListFull) {
-                    if (item.getRoomName().toLowerCase().contains(filterPattern)){
+                for (MeetingRoomItem item : meetingRoomItemListFull) {
+                    if (item.getRoomName().toLowerCase().contains(filterPattern)) {
                         filteredRooms.add(item);
                     }
                 }
@@ -90,6 +90,8 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             clear();
+
+            // TODO : corriger le LIST avec Nino
             addAll((List) results.values);
             notifyDataSetChanged();
         }

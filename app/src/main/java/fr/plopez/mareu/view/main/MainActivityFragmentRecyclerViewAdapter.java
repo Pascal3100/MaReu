@@ -5,11 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ import fr.plopez.mareu.view.model.MeetingViewState;
 public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MainActivityFragmentRecyclerViewViewHolder> {
 
     List<MeetingViewState> meetingViewStates;
-    DeleteMeetingListener deleteMeetingListener;
+    final DeleteMeetingListener deleteMeetingListener;
 
     public MainActivityFragmentRecyclerViewAdapter(DeleteMeetingListener deleteMeetingListener) {
         this.deleteMeetingListener = deleteMeetingListener;
@@ -45,7 +47,9 @@ public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapte
 
         Context context = holder.roomIcon.getContext();
         Glide.with(context)
-                .load(context.getResources().getDrawable(meeting.getRoomDrawableId()))
+                .load(ResourcesCompat.getDrawable(context.getResources(),
+                                                  meeting.getRoomDrawableId(),
+                                                  context.getTheme()))
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.roomIcon);
 

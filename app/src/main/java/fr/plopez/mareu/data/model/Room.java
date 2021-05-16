@@ -1,8 +1,8 @@
 package fr.plopez.mareu.data.model;
 
 public class Room {
-    private String name;
-    private int roomId;
+    private final String name;
+    private final int roomId;
 
     // Constructor
     public Room(String name, int roomId) {

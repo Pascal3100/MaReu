@@ -2,7 +2,7 @@ package fr.plopez.mareu.view.model;
 
 public class MeetingTimeItem {
 
-    private String time;
+    private final String time;
     private Boolean isChecked = false;
 
     public MeetingTimeItem(String time) {

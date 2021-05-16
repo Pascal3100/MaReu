@@ -11,8 +11,8 @@ import fr.plopez.mareu.R;
 
 public class MainActivityFilterDialogRoomViewHolder extends RecyclerView.ViewHolder{
 
-    public CheckBox roomCheckBox;
-    public ImageView roomLogo;
+    public final CheckBox roomCheckBox;
+    public final ImageView roomLogo;
 
     public MainActivityFilterDialogRoomViewHolder(@NonNull View itemView) {
         super(itemView);

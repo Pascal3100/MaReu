@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
-import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;
 import fr.plopez.mareu.view.add.AddMeetingViewModel;
 import fr.plopez.mareu.view.main.MainActivityViewModel;

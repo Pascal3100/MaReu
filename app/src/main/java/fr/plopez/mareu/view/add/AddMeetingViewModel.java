@@ -4,12 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
-import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.utils.SingleLiveEvent;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
@@ -39,9 +38,9 @@ public class AddMeetingViewModel extends ViewModel {
                            int nbEmails){
 
         // Check if all the fields are correctly filled
-        if (subject.isEmpty()) {
+        if (Objects.requireNonNull(subject).isEmpty()) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_SUBJECT_MESSAGE);
-        } else if (room.isEmpty() || !roomFilterRepository.getRoomsNames().contains(room)) {
+        } else if (Objects.requireNonNull(room).isEmpty() || !roomFilterRepository.getRoomsNames().contains(room)) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_ROOM_MESSAGE);
         } else if (nbEmails == 0) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);

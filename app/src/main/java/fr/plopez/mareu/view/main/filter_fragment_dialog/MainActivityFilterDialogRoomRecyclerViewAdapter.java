@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,7 +20,7 @@ import fr.plopez.mareu.view.model.MeetingRoomItem;
 public class MainActivityFilterDialogRoomRecyclerViewAdapter
         extends RecyclerView.Adapter<MainActivityFilterDialogRoomViewHolder> {
 
-    private List<MeetingRoomItem> meetingRoomItemList;
+    private final List<MeetingRoomItem> meetingRoomItemList;
     private final OnModifyFilters onModifyFilters;
 
 
@@ -47,16 +48,15 @@ public class MainActivityFilterDialogRoomRecyclerViewAdapter
         MeetingRoomItem meetingRoomItem = meetingRoomItemList.get(position);
         Context context = holder.roomLogo.getContext();
         Glide.with(context)
-                .load(context.getResources().getDrawable(meetingRoomItem.getRoomImageId()))
+                .load(ResourcesCompat.getDrawable(context.getResources(),
+                        meetingRoomItem.getRoomImageId(),
+                        context.getTheme()))
                 .into(holder.roomLogo);
 
         holder.roomCheckBox.setChecked(meetingRoomItem.isChecked());
-        holder.roomCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                meetingRoomItemList.get(holder.getBindingAdapterPosition()).setChecked(holder.roomCheckBox.isChecked());
-                onModifyFilters.onRoomFilterModify(meetingRoomItemList);
-            }
+        holder.roomCheckBox.setOnClickListener(v -> {
+            meetingRoomItemList.get(holder.getBindingAdapterPosition()).setChecked(holder.roomCheckBox.isChecked());
+            onModifyFilters.onRoomFilterModify(meetingRoomItemList);
         });
     }
 

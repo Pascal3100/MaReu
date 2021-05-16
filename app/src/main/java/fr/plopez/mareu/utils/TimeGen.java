@@ -1,12 +1,9 @@
 package fr.plopez.mareu.utils;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.view.model.MeetingTimeItem;
-import kotlin.jvm.Throws;
 
 public class TimeGen {
 

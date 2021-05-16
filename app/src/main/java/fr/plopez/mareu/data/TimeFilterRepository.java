@@ -11,7 +11,7 @@ import fr.plopez.mareu.view.model.MeetingTimeItem;
 public class TimeFilterRepository {
     private static TimeFilterRepository timeFilterRepositoryInstance;
     private static List<MeetingTimeItem> meetingTimeItemsList;
-    private static MutableLiveData<List<MeetingTimeItem>> meetingTimeItemListMutableLiveData = new MutableLiveData<>();
+    private static final MutableLiveData<List<MeetingTimeItem>> meetingTimeItemListMutableLiveData = new MutableLiveData<>();
 
     // Singleton
     public static TimeFilterRepository getTimeFilterRepositoryInstance() {

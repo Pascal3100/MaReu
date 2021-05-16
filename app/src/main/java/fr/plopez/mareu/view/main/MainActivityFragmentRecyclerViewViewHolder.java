@@ -13,12 +13,12 @@ import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityFragmentRecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
-    public ImageView roomIcon;
-    public TextView meetingResume;
-    public TextView meetingEmails;
-    public AppCompatImageButton trashIcon;
+    public final ImageView roomIcon;
+    public final TextView meetingResume;
+    public final TextView meetingEmails;
+    public final AppCompatImageButton trashIcon;
     private MeetingViewState meeting;
-    private DeleteMeetingListener deleteMeetingListener;
+    private final DeleteMeetingListener deleteMeetingListener;
 
     public MainActivityFragmentRecyclerViewViewHolder(@NonNull View itemView, DeleteMeetingListener deleteMeetingListener) {
         super(itemView);
@@ -33,12 +33,7 @@ public class MainActivityFragmentRecyclerViewViewHolder extends RecyclerView.Vie
     }
 
     private void setOnTrashClickAction(){
-        trashIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteMeetingListener.onClickDeleteMeetingListener(meeting);
-            }
-        });
+        trashIcon.setOnClickListener(v -> deleteMeetingListener.onClickDeleteMeetingListener(meeting));
     }
 
     public void setMeeting(MeetingViewState meeting) {

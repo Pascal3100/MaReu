@@ -1,8 +1,8 @@
 package fr.plopez.mareu.view.model;
 
 public class MeetingRoomItem {
-    private String roomName;
-    private int roomImageId;
+    private final String roomName;
+    private final int roomImageId;
     private boolean isChecked = false;
 
     public MeetingRoomItem(String roomName, int roomImageId) {

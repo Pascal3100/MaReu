@@ -1,7 +1,9 @@
 package fr.plopez.mareu.view.main.filter_fragment_dialog;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,18 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Objects;
 
 import fr.plopez.mareu.databinding.FragmentFilterDialogBinding;
-import fr.plopez.mareu.utils.TimeGen;
 import fr.plopez.mareu.view.ViewModelFactory;
 import fr.plopez.mareu.view.main.MainActivityViewModel;
 import fr.plopez.mareu.view.main.OnModifyFilters;
@@ -75,12 +69,7 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
 
         //TODO: implementer l'observer pour la mise à jour du texte (nb de meetings trouvés avec les filtres en cours)
 
-        fragmentFilterDialogBinding.closeFilterDialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        fragmentFilterDialogBinding.closeFilterDialogButton.setOnClickListener(v -> dismiss());
 
         return fragmentFilterDialogBinding.getRoot();
     }

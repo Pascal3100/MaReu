@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 public class Time {
 
-    private Calendar calendar = Calendar.getInstance();
+    private final Calendar calendar = Calendar.getInstance();
 
     public int getCurrentHour() {
         return calendar.get(Calendar.HOUR_OF_DAY);

@@ -4,23 +4,19 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
-import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;
 import fr.plopez.mareu.data.model.Meeting;
-import fr.plopez.mareu.utils.TimeGen;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
 import fr.plopez.mareu.view.model.MeetingViewState;
@@ -50,30 +46,21 @@ public class MainActivityViewModel extends ViewModel {
         LiveData<List<MeetingTimeItem>> timeFilterLiveData = timeFilterRepository.getMeetingTimeItemListLiveData();
 
         // Add meeting list to mediatorLiveData
-        filteredMeetingListMediatorLiveData.addSource(meetingsLiveData, new Observer<List<Meeting>>() {
-            @Override
-            public void onChanged(List<Meeting> meetingsLiveData) {
-                Log.d(TAG, "---------- onChanged: meetingsLiveData has changed");
-                combine(meetingsLiveData, roomFilterLiveData.getValue(), timeFilterLiveData.getValue());
-            }
+        filteredMeetingListMediatorLiveData.addSource(meetingsLiveData, meetingsLiveData1 -> {
+            Log.d(TAG, "---------- onChanged: meetingsLiveData has changed");
+            combine(meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue());
         });
 
         // Add room filter to mediatorLiveData
-        filteredMeetingListMediatorLiveData.addSource(roomFilterLiveData, new Observer<List<MeetingRoomItem>>() {
-            @Override
-            public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
-                Log.d(TAG, "---------- onChanged: roomFilterLiveData has changed");
-                combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue());
-            }
+        filteredMeetingListMediatorLiveData.addSource(roomFilterLiveData, meetingRoomItemList -> {
+            Log.d(TAG, "---------- onChanged: roomFilterLiveData has changed");
+            combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue());
         });
 
         // Add time filter to mediatorLiveData
-        filteredMeetingListMediatorLiveData.addSource(timeFilterLiveData, new Observer<List<MeetingTimeItem>>() {
-            @Override
-            public void onChanged(List<MeetingTimeItem> meetingTimeItemList) {
-                Log.d(TAG, "---------- onChanged: timeFilterLiveData has changed");
-                combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList);
-            }
+        filteredMeetingListMediatorLiveData.addSource(timeFilterLiveData, meetingTimeItemList -> {
+            Log.d(TAG, "---------- onChanged: timeFilterLiveData has changed");
+            combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList);
         });
     }
 
@@ -84,7 +71,7 @@ public class MainActivityViewModel extends ViewModel {
         List<Meeting> filteredMeetingsList;
 
         // Exclusion management
-        if (meetingsList.size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
+        if (Objects.requireNonNull(meetingsList).size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
             filteredMeetingListMediatorLiveData.setValue(meetingsList);
             return;
         } else {
@@ -130,12 +117,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public LiveData<List<MeetingViewState>> getMainActivityViewStatesLiveData() {
-        return Transformations.map(filteredMeetingListMediatorLiveData, new Function<List<Meeting>, List<MeetingViewState>>() {
-            @Override
-            public List<MeetingViewState> apply(List<Meeting> input) {
-                return mapMeetingsToListOfMeetingViewState(input);
-            }
-        });
+        return Transformations.map(filteredMeetingListMediatorLiveData, this::mapMeetingsToListOfMeetingViewState);
     }
 
     private List<MeetingViewState> mapMeetingsToListOfMeetingViewState(List<Meeting> meetings) {
@@ -171,21 +153,10 @@ public class MainActivityViewModel extends ViewModel {
 
 
     public void updateRoomFilter(List<MeetingRoomItem> meetingRoomItemList) {
-/*        Log.d(TAG, "--------- updateRoomFilter: --------- ");
-        for (MeetingRoomItem m:meetingRoomItemList){
-            Log.d(TAG, "        --> "+m.getRoomName()+" -- "+m.isChecked());
-        }
-*/
         roomFilterRepository.updateMeetingRoomItemList(meetingRoomItemList);
     }
 
     public void updateTimeFilter(List<MeetingTimeItem> meetingTimeItemList) {
-/*
-        Log.d(TAG, "--------- updateTimeFilter: --------- ");
-        for (MeetingTimeItem m:meetingTimeItemList){
-            Log.d(TAG, "        --> "+m.getTime()+" -- "+m.isChecked());
-        }
-*/
         timeFilterRepository.updateMeetingTimeItemList(meetingTimeItemList);
     }
 

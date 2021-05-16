@@ -1,7 +1,5 @@
 package fr.plopez.mareu.view.model;
 
-import fr.plopez.mareu.data.model.Meeting;
-
 public class MeetingViewState {
 
     private final String meetingResume;
