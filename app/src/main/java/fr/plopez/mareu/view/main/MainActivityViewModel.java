@@ -1,7 +1,5 @@
 package fr.plopez.mareu.view.main;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -11,7 +9,6 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
@@ -47,19 +44,16 @@ public class MainActivityViewModel extends ViewModel {
 
         // Add meeting list to mediatorLiveData
         filteredMeetingListMediatorLiveData.addSource(meetingsLiveData, meetingsLiveData1 -> {
-            Log.d(TAG, "---------- onChanged: meetingsLiveData has changed");
             combine(meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue());
         });
 
         // Add room filter to mediatorLiveData
         filteredMeetingListMediatorLiveData.addSource(roomFilterLiveData, meetingRoomItemList -> {
-            Log.d(TAG, "---------- onChanged: roomFilterLiveData has changed");
             combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue());
         });
 
         // Add time filter to mediatorLiveData
         filteredMeetingListMediatorLiveData.addSource(timeFilterLiveData, meetingTimeItemList -> {
-            Log.d(TAG, "---------- onChanged: timeFilterLiveData has changed");
             combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList);
         });
     }
@@ -71,7 +65,7 @@ public class MainActivityViewModel extends ViewModel {
         List<Meeting> filteredMeetingsList;
 
         // Exclusion management
-        if (Objects.requireNonNull(meetingsList).size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
+        if (meetingsList.size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
             filteredMeetingListMediatorLiveData.setValue(meetingsList);
             return;
         } else {

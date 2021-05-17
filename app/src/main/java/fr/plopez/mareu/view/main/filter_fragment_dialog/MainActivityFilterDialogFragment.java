@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
-import java.util.Objects;
 
 import fr.plopez.mareu.databinding.FragmentFilterDialogBinding;
 import fr.plopez.mareu.view.ViewModelFactory;
@@ -60,7 +59,7 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
         roomFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragmentFilterDialogBinding.roomFilter.setLayoutManager(roomFilterLinearLayoutManager);
         fragmentFilterDialogBinding.roomFilter.addItemDecoration(
-                new DividerItemDecoration(Objects.requireNonNull(getContext()),
+                new DividerItemDecoration(getContext(),
                 DividerItemDecoration.HORIZONTAL));
 
         LinearLayoutManager timeFilterLinearLayoutManager = new LinearLayoutManager(getContext());

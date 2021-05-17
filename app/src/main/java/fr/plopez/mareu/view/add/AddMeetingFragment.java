@@ -18,7 +18,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
@@ -114,7 +113,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         // Set the save button behavior
         fragAddMeetingActBinding.saveButton.setOnClickListener(v -> {
 
-            String subject = Objects.requireNonNull(fragAddMeetingActBinding.textInputSubjectContent.getText()).toString();
+            String subject = fragAddMeetingActBinding.textInputSubjectContent.getText().toString();
             String selectedRoom = fragAddMeetingActBinding.roomSelectorMenu.getText().toString();
             String time = fragAddMeetingActBinding.timePickerText.getText().toString();
             int nbEmails = fragAddMeetingActBinding.emailsChipGroup.getChildCount();
@@ -143,7 +142,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         updateTimeText();
 
         AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(
-                Objects.requireNonNull(getContext()),
+                getContext(),
                 addMeetingViewModel.getMeetingRoomItemList());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
@@ -153,7 +152,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
             action -> {
                 switch (action) {
                     case FINISH_ACTIVITY:
-                        Objects.requireNonNull(Objects.requireNonNull(getActivity())).finish();
+                        getActivity().finish();
                         break;
                     case DISPLAY_INCORRECT_SUBJECT_MESSAGE:
                     case DISPLAY_INCORRECT_ROOM_MESSAGE:
@@ -166,7 +165,10 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
     }
 
     private void updateTimeText(){
-        fragAddMeetingActBinding.timePickerText.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, min));
+        fragAddMeetingActBinding.timePickerText.setText(String.format(Locale.getDefault(),
+                "%02d:%02d",
+                hour,
+                min));
     }
 
     // Pops timepicker
