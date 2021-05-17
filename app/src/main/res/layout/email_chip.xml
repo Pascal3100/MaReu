@@ -2,15 +2,16 @@
 
 <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.Chip.Entry"
-    app:chipBackgroundColor="@color/backgroundChips"
-    android:textColor="@color/background"
-    app:closeIconTint="@color/background"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:checkable="false"
     android:clickable="false"
+    android:textColor="@color/background"
+    app:chipBackgroundColor="@color/backgroundChips"
+    app:closeIconTint="@color/background"
+    app:chipMinTouchTargetSize="0dp"
     tools:layout_width="wrap_content"
     tools:text="pascal.lopez@expleogroup.com">
 

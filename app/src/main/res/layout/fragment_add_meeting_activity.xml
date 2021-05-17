@@ -158,6 +158,8 @@
             android:layout_height="0dp"
             android:layout_marginVertical="@dimen/fields_standard_margin"
             android:background="@drawable/custom_background_shape"
+            android:padding="8dp"
+            app:chipSpacingVertical="8dp"
             app:layout_constraintBottom_toTopOf="@id/save_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
