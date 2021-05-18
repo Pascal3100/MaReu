@@ -8,4 +8,9 @@
     <dimen name="chips_group_border_width">2dp</dimen>
     <dimen name="chips_group_border_radius">10dp</dimen>
 
+    <dimen name="filters_layout_max_height">152dp</dimen>
+    <dimen name="filters_recycler_view_height">200dp</dimen>
+
+
+
 </resources>

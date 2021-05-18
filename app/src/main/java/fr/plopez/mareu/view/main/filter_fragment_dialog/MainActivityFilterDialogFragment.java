@@ -60,7 +60,7 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
         fragmentFilterDialogBinding.roomFilter.setLayoutManager(roomFilterLinearLayoutManager);
         fragmentFilterDialogBinding.roomFilter.addItemDecoration(
                 new DividerItemDecoration(getContext(),
-                DividerItemDecoration.HORIZONTAL));
+                        DividerItemDecoration.HORIZONTAL));
 
         LinearLayoutManager timeFilterLinearLayoutManager = new LinearLayoutManager(getContext());
         timeFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -82,12 +82,19 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fragmentFilterDialogBinding.roomFilter.setAdapter(
-                new MainActivityFilterDialogRoomRecyclerViewAdapter(
-                        filterDialogViewModel.getMeetingRoomItemList(),
-                        onModifyFilters
-                )
-        );
+        filterDialogViewModel.getMeetingRoomItemList().observe(
+                getViewLifecycleOwner(),
+                new Observer<List<MeetingRoomItem>>() {
+            @Override
+            public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
+                fragmentFilterDialogBinding.roomFilter.setAdapter(
+                        new MainActivityFilterDialogRoomRecyclerViewAdapter(
+                                meetingRoomItemList,
+                                onModifyFilters
+                        )
+                );
+            }
+        });
         fragmentFilterDialogBinding.timeFilter.setAdapter(
                 new MainActivityFilterDialogTimeRecyclerViewAdapter(
                         filterDialogViewModel.getMeetingTimeItemList(),

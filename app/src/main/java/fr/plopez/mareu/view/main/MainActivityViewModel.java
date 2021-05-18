@@ -105,12 +105,4 @@ public class MainActivityViewModel extends ViewModel {
         }
         return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
     }
-
-    public List<MeetingRoomItem> getMeetingRoomItemList() {
-        return roomFilterRepository.getMeetingRoomItemListLiveData().getValue();
-    }
-
-    public List<MeetingTimeItem> getMeetingTimeItemList() {
-        return timeFilterRepository.getMeetingTimeItemListLiveData().getValue();
-    }
 }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import fr.plopez.mareu.App;
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;
@@ -39,7 +40,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         } else if (modelClass.isAssignableFrom(AddMeetingViewModel.class)) {
             return (T) new AddMeetingViewModel(meetingsRepository, roomFilterRepository);
         } else if (modelClass.isAssignableFrom(MainActivityFilterDialogFragmentViewModel.class)) {
-            return (T) new MainActivityFilterDialogFragmentViewModel(meetingsRepository, roomFilterRepository, timeFilterRepository);
+            return (T) new MainActivityFilterDialogFragmentViewModel(
+                    meetingsRepository,
+                    roomFilterRepository,
+                    timeFilterRepository,
+                    App.getApplication());
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

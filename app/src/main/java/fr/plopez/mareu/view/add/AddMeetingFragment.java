@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.chip.Chip;
@@ -23,6 +24,7 @@ import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
 import fr.plopez.mareu.view.ViewModelFactory;
+import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.view_utils.AutoCompleteRoomSelectorMenuAdapter;
 import fr.plopez.mareu.view.view_utils.CustomToasts;
 
@@ -38,6 +40,8 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
     private int hour,min;
     private static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+    private AutoCompleteRoomSelectorMenuAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -141,9 +145,18 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
-        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(
-                getContext(),
-                addMeetingViewModel.getMeetingRoomItemList());
+        addMeetingViewModel.getMeetingRoomItemList().observe(
+                getViewLifecycleOwner(),
+                new Observer<List<MeetingRoomItem>>() {
+                    @Override
+                    public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
+                        adapter = new AutoCompleteRoomSelectorMenuAdapter(
+                                requireContext(),
+                                meetingRoomItemList
+                        );
+                    }
+                });
+
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
         // init observer

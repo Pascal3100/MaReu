@@ -1,5 +1,7 @@
 package fr.plopez.mareu.view.main.filter_fragment_dialog;
 
+import android.app.Application;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
+import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;
@@ -23,15 +26,18 @@ public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
     private final MeetingsRepository meetingsRepository;
     private final RoomFilterRepository roomFilterRepository;
     private final TimeFilterRepository timeFilterRepository;
+    private final Application app;
 
     private final MediatorLiveData<String> numberOfFilteredMeetingMediatorLiveData = new MediatorLiveData<>();
 
     public MainActivityFilterDialogFragmentViewModel(MeetingsRepository meetingsRepository,
                                                      RoomFilterRepository roomFilterRepository,
-                                                     TimeFilterRepository timeFilterRepository) {
+                                                     TimeFilterRepository timeFilterRepository,
+                                                     Application app) {
         this.meetingsRepository = meetingsRepository;
         this.roomFilterRepository = roomFilterRepository;
         this.timeFilterRepository = timeFilterRepository;
+        this.app = app;
 
         LiveData<List<Meeting>> meetingsLiveData = meetingsRepository.getMeetings();
         LiveData<List<MeetingRoomItem>> roomFilterLiveData = roomFilterRepository.getMeetingRoomItemListLiveData();
@@ -69,15 +75,14 @@ public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
     }
 
     private String mapNumberOfFilteredMeetingToString(Integer numberOfFilteredMeeting) {
-        String toConcat = "0";
+        String toConcat = "";
+
         if (numberOfFilteredMeeting > 1) {
-            // toConcat = Resources.getSystem().getString(R.string.filter_text_message_singular);
-            toConcat = " meeting found";
+            toConcat = app.getString(R.string.filter_text_message_singular);
         } else {
-            // toConcat = Resources.getSystem().getString(R.string.filter_text_message_plural);
-            toConcat = " meetings found";
+            toConcat = app.getString(R.string.filter_text_message_plural);
         }
-        return numberOfFilteredMeeting.toString() + toConcat;
+        return numberOfFilteredMeeting.toString() + " " + toConcat;
     }
 
     public void updateRoomFilter(List<MeetingRoomItem> meetingRoomItemList) {
@@ -88,8 +93,8 @@ public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
         timeFilterRepository.updateMeetingTimeItemList(meetingTimeItemList);
     }
 
-    public List<MeetingRoomItem> getMeetingRoomItemList() {
-        return roomFilterRepository.getMeetingRoomItemListLiveData().getValue();
+    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList() {
+        return roomFilterRepository.getMeetingRoomItemListLiveData();
     }
 
     public List<MeetingTimeItem> getMeetingTimeItemList() {

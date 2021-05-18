@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="top|center"
-            android:maxHeight="152dp"
+            android:maxHeight="@dimen/filters_layout_max_height"
             android:orientation="vertical"
             android:padding="8dp"
             app:layout_constraintEnd_toStartOf="@+id/time_layout"
@@ -39,7 +39,7 @@
                 android:id="@+id/room_filter_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Room filter"
+                android:text="@string/room_filter_label_text"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="italic">
@@ -49,7 +49,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/room_filter"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/filters_recycler_view_height"
                 android:layout_marginTop="8dp">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="top|center"
-            android:maxHeight="152dp"
+            android:maxHeight="@dimen/filters_layout_max_height"
             android:orientation="vertical"
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +86,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/time_filter"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/filters_recycler_view_height"
                 android:layout_marginTop="8dp">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -97,7 +97,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="5 Meetings were found"
             android:textAlignment="center"
             android:textSize="14sp"
             android:textStyle="italic"
@@ -113,7 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_margin="16dp"
-            android:text="Close"
+            android:text="@string/filter_close_button_text"
             android:textSize="14sp"
             app:cornerRadius="24dp"
             app:layout_constraintEnd_toEndOf="parent"

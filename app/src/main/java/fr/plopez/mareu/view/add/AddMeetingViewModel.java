@@ -2,6 +2,7 @@ package fr.plopez.mareu.view.add;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class AddMeetingViewModel extends ViewModel {
     }
 
     // Provides rooms items list
-    public List<MeetingRoomItem> getMeetingRoomItemList(){
-        return roomFilterRepository.getMeetingRoomItemListLiveData().getValue();
+    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList(){
+        return roomFilterRepository.getMeetingRoomItemListLiveData();
     }
 }

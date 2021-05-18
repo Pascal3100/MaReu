@@ -5,4 +5,11 @@
 
     <string name="filter_text_message_singular"> meeting found</string>
     <string name="filter_text_message_plural"> meetings found</string>
+
+    <string name="save_new_meeting_button_text">Save new meeting</string>
+    <string name="filter_close_button_text">Close</string>
+    <string name="room_filter_label_text">Room filter</string>
+    <string name="time_filter_label_text">Time filter</string>
+
+
 </resources>
