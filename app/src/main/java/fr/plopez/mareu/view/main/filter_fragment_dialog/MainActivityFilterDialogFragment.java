@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,7 +18,6 @@ import java.util.List;
 
 import fr.plopez.mareu.databinding.FragmentFilterDialogBinding;
 import fr.plopez.mareu.view.ViewModelFactory;
-import fr.plopez.mareu.view.main.MainActivityViewModel;
 import fr.plopez.mareu.view.main.OnModifyFilters;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
@@ -30,7 +30,7 @@ import fr.plopez.mareu.view.model.MeetingTimeItem;
 public class MainActivityFilterDialogFragment extends DialogFragment implements OnModifyFilters {
 
     private FragmentFilterDialogBinding fragmentFilterDialogBinding;
-    private MainActivityViewModel mainActivityViewModel;
+    private MainActivityFilterDialogFragmentViewModel filterDialogViewModel;
     private OnModifyFilters onModifyFilters;
 
     public MainActivityFilterDialogFragment() {
@@ -50,10 +50,10 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
 
         onModifyFilters = (OnModifyFilters) this;
 
-        mainActivityViewModel = new ViewModelProvider(
+        filterDialogViewModel = new ViewModelProvider(
                 this,
                 ViewModelFactory.getInstance())
-                .get(MainActivityViewModel.class);
+                .get(MainActivityFilterDialogFragmentViewModel.class);
 
         LinearLayoutManager roomFilterLinearLayoutManager = new LinearLayoutManager(getContext());
         roomFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -66,7 +66,12 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
         timeFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragmentFilterDialogBinding.timeFilter.setLayoutManager(timeFilterLinearLayoutManager);
 
-        //TODO: implementer l'observer pour la mise à jour du texte (nb de meetings trouvés avec les filtres en cours)
+        filterDialogViewModel.getFilterDialogDynamicTextLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                fragmentFilterDialogBinding.filterText.setText(s);
+            }
+        });
 
         fragmentFilterDialogBinding.closeFilterDialogButton.setOnClickListener(v -> dismiss());
 
@@ -79,13 +84,13 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
 
         fragmentFilterDialogBinding.roomFilter.setAdapter(
                 new MainActivityFilterDialogRoomRecyclerViewAdapter(
-                        mainActivityViewModel.getMeetingRoomItemList(),
+                        filterDialogViewModel.getMeetingRoomItemList(),
                         onModifyFilters
                 )
         );
         fragmentFilterDialogBinding.timeFilter.setAdapter(
                 new MainActivityFilterDialogTimeRecyclerViewAdapter(
-                        mainActivityViewModel.getMeetingTimeItemList(),
+                        filterDialogViewModel.getMeetingTimeItemList(),
                         onModifyFilters
                 )
         );
@@ -93,11 +98,11 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
 
     @Override
     public void onRoomFilterModify(List<MeetingRoomItem> meetingRoomItemList) {
-        mainActivityViewModel.updateRoomFilter(meetingRoomItemList);
+        filterDialogViewModel.updateRoomFilter(meetingRoomItemList);
     }
 
     @Override
     public void onTimeFilterModify(List<MeetingTimeItem> meetingTimeItemList) {
-        mainActivityViewModel.updateTimeFilter(meetingTimeItemList);
+        filterDialogViewModel.updateTimeFilter(meetingTimeItemList);
     }
 }

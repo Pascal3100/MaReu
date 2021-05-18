@@ -2,6 +2,7 @@
     <string name="app_name">Ma Reu</string>
     <string name="sortByRoom">Sort by room</string>
     <string name="sortByTime">Sort by time</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="filter_text_message_singular"> meeting found</string>
+    <string name="filter_text_message_plural"> meetings found</string>
 </resources>

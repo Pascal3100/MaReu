@@ -1,7 +1,5 @@
 package fr.plopez.mareu.data;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -30,7 +28,6 @@ public class RoomFilterRepository {
     private void initRepo() {
         roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
         buildRoomItems();
-        Log.d("------ TAG", "initRepo: "+meetingRoomItemsList.toString());
         meetingRoomItemListMutableLiveData.setValue(meetingRoomItemsList);
     }
 
@@ -42,8 +39,6 @@ public class RoomFilterRepository {
             meetingRoomItemsList.add(new MeetingRoomItem(roomName,
                     roomsRepositoryInstance.getRoomByName(roomName).getRoomId()));
         }
-
-        Log.d("------ TAG", "buildRoomItems: "+meetingRoomItemsList.toString());
     }
 
     public LiveData<List<MeetingRoomItem>> getMeetingRoomItemListLiveData() {
@@ -60,7 +55,7 @@ public class RoomFilterRepository {
     }
 
     // Get Room Object
-    public Room getRoomByName(String roomName){
+    public Room getRoomByName(String roomName) {
         return roomsRepositoryInstance.getRoomByName(roomName);
     }
 }

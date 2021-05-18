@@ -1,7 +1,6 @@
 package fr.plopez.mareu.view.main;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,6 @@ public class MainActivityFragmentRecyclerViewAdapter extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(@NonNull MainActivityFragmentRecyclerViewViewHolder holder, int position) {
-        Log.d("TAG", "onBindViewHolder: item id " + position + "created");
         MeetingViewState meeting = meetingViewStates.get(position);
 
         Context context = holder.roomIcon.getContext();

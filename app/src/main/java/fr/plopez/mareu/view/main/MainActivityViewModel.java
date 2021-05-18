@@ -14,6 +14,7 @@ import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.utils.MeetingsFilterUtil;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
 import fr.plopez.mareu.view.model.MeetingViewState;
@@ -62,52 +63,12 @@ public class MainActivityViewModel extends ViewModel {
                          @Nullable List<MeetingRoomItem> meetingRoomItemList,
                          @Nullable List<MeetingTimeItem> meetingTimeItemList) {
 
-        List<Meeting> filteredMeetingsList;
+        filteredMeetingListMediatorLiveData.setValue(MeetingsFilterUtil.meetingsFilter(
+                meetingsList,
+                meetingRoomItemList,
+                meetingTimeItemList)
+        );
 
-        // Exclusion management
-        if (meetingsList.size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
-            filteredMeetingListMediatorLiveData.setValue(meetingsList);
-            return;
-        } else {
-            filteredMeetingsList = new ArrayList<>(meetingsList);
-        }
-
-        List<Meeting> meetingsToNotKeep = new ArrayList<>();
-
-        // Filter by room name
-        List<String> roomsFilter = new ArrayList<>();
-        for (MeetingRoomItem meetingRoomItem : meetingRoomItemList) {
-            if (meetingRoomItem.isChecked()) {
-                roomsFilter.add(meetingRoomItem.getRoomName().toLowerCase());
-            }
-        }
-        if (roomsFilter.size() > 0) {
-            for (Meeting meeting : filteredMeetingsList) {
-                if (!roomsFilter.contains(meeting.getRoom().getName().toLowerCase())) {
-                    meetingsToNotKeep.add(meeting);
-                }
-            }
-        }
-        // Filter by time hour
-        List<String> timeFilter = new ArrayList<>();
-        for (MeetingTimeItem meetingTimeItem : meetingTimeItemList) {
-            if (meetingTimeItem.isChecked()) {
-                timeFilter.add(meetingTimeItem.getHour());
-            }
-        }
-        if (timeFilter.size() > 0) {
-            for (Meeting meeting : filteredMeetingsList) {
-                if (!timeFilter.contains(meeting.getStartHour().split(":")[0])) {
-                    meetingsToNotKeep.add(meeting);
-                }
-            }
-        }
-        // Delete all filtered meetings
-        for (Meeting meeting : meetingsToNotKeep) {
-            filteredMeetingsList.remove(meeting);
-        }
-
-        filteredMeetingListMediatorLiveData.setValue(filteredMeetingsList);
     }
 
     public LiveData<List<MeetingViewState>> getMainActivityViewStatesLiveData() {
@@ -143,15 +104,6 @@ public class MainActivityViewModel extends ViewModel {
             emails = emails.concat(email + EMAIL_SEPARATOR);
         }
         return emails.substring(0, emails.length() - EMAIL_SEPARATOR.length());
-    }
-
-
-    public void updateRoomFilter(List<MeetingRoomItem> meetingRoomItemList) {
-        roomFilterRepository.updateMeetingRoomItemList(meetingRoomItemList);
-    }
-
-    public void updateTimeFilter(List<MeetingTimeItem> meetingTimeItemList) {
-        timeFilterRepository.updateMeetingTimeItemList(meetingTimeItemList);
     }
 
     public List<MeetingRoomItem> getMeetingRoomItemList() {
