@@ -10,6 +10,5 @@
     <string name="filter_close_button_text">Close</string>
     <string name="room_filter_label_text">Room filter</string>
     <string name="time_filter_label_text">Time filter</string>
-
-
+    <string name="meeting_time_picker_label_text">Please set meeting start time</string>
 </resources>

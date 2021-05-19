@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.R;
@@ -17,11 +18,10 @@ import fr.plopez.mareu.view.model.MeetingTimeItem;
 public class MainActivityFilterDialogTimeRecyclerViewAdapter
         extends RecyclerView.Adapter<MainActivityFilterDialogTimeViewHolder> {
 
-    private final List<MeetingTimeItem> meetingTimeItemList;
+    private List<MeetingTimeItem> meetingTimeItemList = new ArrayList<>();
     private final OnModifyFilters onModifyFilters;
 
-    public MainActivityFilterDialogTimeRecyclerViewAdapter(List<MeetingTimeItem> meetingTimeItemList, OnModifyFilters onModifyFilters) {
-        this.meetingTimeItemList = meetingTimeItemList;
+    public MainActivityFilterDialogTimeRecyclerViewAdapter(OnModifyFilters onModifyFilters) {
         this.onModifyFilters = onModifyFilters;
     }
 
@@ -57,4 +57,10 @@ public class MainActivityFilterDialogTimeRecyclerViewAdapter
     public int getItemCount() {
         return meetingTimeItemList.size();
     }
+
+    public void submitList(List<MeetingTimeItem> meetingTimeItemList){
+        this.meetingTimeItemList = meetingTimeItemList;
+        notifyDataSetChanged();
+    }
+
 }

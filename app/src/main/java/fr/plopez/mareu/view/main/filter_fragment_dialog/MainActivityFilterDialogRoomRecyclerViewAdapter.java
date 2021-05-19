@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.R;
@@ -20,12 +21,12 @@ import fr.plopez.mareu.view.model.MeetingRoomItem;
 public class MainActivityFilterDialogRoomRecyclerViewAdapter
         extends RecyclerView.Adapter<MainActivityFilterDialogRoomViewHolder> {
 
-    private final List<MeetingRoomItem> meetingRoomItemList;
+    private List<MeetingRoomItem> meetingRoomItemList = new ArrayList<>();
     private final OnModifyFilters onModifyFilters;
 
 
-    public MainActivityFilterDialogRoomRecyclerViewAdapter(List<MeetingRoomItem> meetingRoomItemList, OnModifyFilters onModifyFilters) {
-        this.meetingRoomItemList = meetingRoomItemList;
+    public MainActivityFilterDialogRoomRecyclerViewAdapter(
+            OnModifyFilters onModifyFilters) {
         this.onModifyFilters = onModifyFilters;
     }
 
@@ -66,5 +67,10 @@ public class MainActivityFilterDialogRoomRecyclerViewAdapter
             return 0;
         }
         return meetingRoomItemList.size();
+    }
+
+    public void submitList(List<MeetingRoomItem> meetingRoomItemList){
+        this.meetingRoomItemList = meetingRoomItemList;
+        notifyDataSetChanged();
     }
 }

@@ -82,25 +82,41 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        MainActivityFilterDialogRoomRecyclerViewAdapter roomRecyclerViewAdapter =
+                new MainActivityFilterDialogRoomRecyclerViewAdapter(
+                onModifyFilters
+        );
+
+        // Observe roomItemsList
+        fragmentFilterDialogBinding.roomFilter.setAdapter(roomRecyclerViewAdapter);
+
         filterDialogViewModel.getMeetingRoomItemList().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MeetingRoomItem>>() {
             @Override
             public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
-                fragmentFilterDialogBinding.roomFilter.setAdapter(
-                        new MainActivityFilterDialogRoomRecyclerViewAdapter(
-                                meetingRoomItemList,
-                                onModifyFilters
-                        )
-                );
+                roomRecyclerViewAdapter.submitList(meetingRoomItemList);
             }
         });
-        fragmentFilterDialogBinding.timeFilter.setAdapter(
+
+
+
+        // Observe TimeItemsList
+        MainActivityFilterDialogTimeRecyclerViewAdapter timeRecyclerViewAdapter =
                 new MainActivityFilterDialogTimeRecyclerViewAdapter(
-                        filterDialogViewModel.getMeetingTimeItemList(),
-                        onModifyFilters
-                )
+                onModifyFilters
         );
+
+        fragmentFilterDialogBinding.timeFilter.setAdapter(timeRecyclerViewAdapter);
+
+        filterDialogViewModel.getMeetingTimeItemList().observe(
+                getViewLifecycleOwner(),
+                new Observer<List<MeetingTimeItem>>() {
+                    @Override
+                    public void onChanged(List<MeetingTimeItem> meetingTimeItemList) {
+                        timeRecyclerViewAdapter.submitList(meetingTimeItemList);
+                    }
+                });
     }
 
     @Override

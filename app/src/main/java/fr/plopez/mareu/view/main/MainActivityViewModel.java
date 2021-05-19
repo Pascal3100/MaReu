@@ -93,12 +93,12 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     // Calculate resume text to display in view holders
-    public String getResume(Meeting meeting) {
+    private String getResume(Meeting meeting) {
         return meeting.getSubject() + RESUME_SEPARATOR + meeting.getStartHour();
     }
 
     // Calculate email text to display in view holders
-    public String getEmails(Meeting meeting) {
+    private String getEmails(Meeting meeting) {
         String emails = "";
         for (String email : meeting.getParticipantsEmailList()) {
             emails = emails.concat(email + EMAIL_SEPARATOR);

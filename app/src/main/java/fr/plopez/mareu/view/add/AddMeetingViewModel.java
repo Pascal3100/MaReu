@@ -1,10 +1,12 @@
 package fr.plopez.mareu.view.add;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.data.MeetingsRepository;
@@ -18,45 +20,110 @@ public class AddMeetingViewModel extends ViewModel {
     private final MeetingsRepository meetingsRepository;
     private final RoomFilterRepository roomFilterRepository;
 
+    // SingleLiveEvent for notification management
     private final SingleLiveEvent<AddMeetingViewAction> addMeetingViewActionSingleLiveEvent = new SingleLiveEvent<>();
 
+    // LiveData for emails management
+    private MutableLiveData<List<String>> emailsListMutableLiveData = new MutableLiveData<>();
+
+    // Meeting hosted data
+    private String subject = "";
+    private String startTime = "";
+    private String meetingRoom = "";
+    private List<String> emailsList = new ArrayList<>();
+
     public AddMeetingViewModel(MeetingsRepository meetingsRepository,
-                               RoomFilterRepository roomFilterRepository){
+                               RoomFilterRepository roomFilterRepository) {
         this.meetingsRepository = meetingsRepository;
         this.roomFilterRepository = roomFilterRepository;
     }
 
-    public SingleLiveEvent<AddMeetingViewAction> getAddMeetingViewActionSingleLiveEvent(){
+    public SingleLiveEvent<AddMeetingViewAction> getAddMeetingViewActionSingleLiveEvent() {
         return addMeetingViewActionSingleLiveEvent;
     }
 
     // Add a new meeting
-    public void addMeeting(@Nullable String subject,
-                           @NonNull String time,
-                           @Nullable String room,
-                           @Nullable List<String> emails,
-                           int nbEmails){
+    public void addMeeting() {
 
         // Check if all the fields are correctly filled
-        if (subject.isEmpty()) {
+        if (checkIfStringIsEmpty(subject)) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_SUBJECT_MESSAGE);
-        } else if (room.isEmpty() || !roomFilterRepository.getRoomsNames().contains(room)) {
+        } else if (checkIfStringIsEmpty(meetingRoom)) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_ROOM_MESSAGE);
-        } else if (nbEmails == 0) {
+        } else if (emailsList.size() == 0) {
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);
         } else {
-            meetingsRepository.addMeeting(new Meeting(meetingsRepository.generateId(), subject, time, roomFilterRepository.getRoomByName(room), emails));
+            meetingsRepository.addMeeting(new Meeting(
+                    meetingsRepository.generateId(),
+                    subject, startTime,
+                    roomFilterRepository.getRoomByName(meetingRoom),
+                    emailsList));
             addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.FINISH_ACTIVITY);
         }
     }
 
-    // Provides rooms names
-    public List<String> getRoomsNames() {
-        return roomFilterRepository.getRoomsNames();
+    // Provides rooms items list
+    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList() {
+        return roomFilterRepository.getMeetingRoomItemListLiveData();
     }
 
-    // Provides rooms items list
-    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList(){
-        return roomFilterRepository.getMeetingRoomItemListLiveData();
+    // Emails LiveData getter
+    public LiveData<List<String>> getEmailsListLiveData() {
+        return emailsListMutableLiveData;
+    }
+
+    // Add Email
+    public void addEmail(String email) {
+
+        // Email pattern to check
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        if (checkIfStringIsEmpty(email)) {
+            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_EMPTY_EMAIL_MESSAGE);
+        } else if (!email.trim().matches(emailPattern)) {
+            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);
+        } else {
+            emailsList.add(email);
+            emailsListMutableLiveData.setValue(emailsList);
+        }
+    }
+
+    // Remove Email
+    public void removeEmail(String email) {
+        emailsList.remove(email);
+        emailsListMutableLiveData.setValue(emailsList);
+    }
+
+    // Add Subject
+    public void addSubject(String inputFieldText) {
+        if (checkIfStringIsEmpty(inputFieldText)) {
+            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_SUBJECT_MESSAGE);
+        } else {
+            subject = inputFieldText;
+        }
+    }
+
+    // Add Room
+    public void addRoom(String inputFieldText) {
+
+        if (checkIfStringIsEmpty(inputFieldText) || !roomFilterRepository.getRoomsNames().contains(inputFieldText)) {
+            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_ROOM_MESSAGE);
+        } else {
+            meetingRoom = inputFieldText;
+        }
+    }
+
+    // Add start time
+    public void addStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    // Empty Strings checker util
+    private boolean checkIfStringIsEmpty(String inputString) {
+        Log.d("TAG", "checkIfStringIsEmpty: "+inputString);
+        if (inputString.isEmpty() || inputString == null || inputString == "") {
+            return true;
+        }
+        return false;
     }
 }

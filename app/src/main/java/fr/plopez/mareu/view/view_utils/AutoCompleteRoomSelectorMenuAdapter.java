@@ -22,11 +22,11 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     private DropDownItemBinding dropDownItemBinding;
 
     // Saves the list of items because of the filtering operations
-    private final List<MeetingRoomItem> meetingRoomItemListFull;
+    private List<MeetingRoomItem> meetingRoomItemListFull;
 
-    public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context, @NonNull List<MeetingRoomItem> meetingRoomItemList) {
-        super(context, resource, meetingRoomItemList);
-        meetingRoomItemListFull = new ArrayList<>(meetingRoomItemList);
+    public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context) {
+        super(context, resource);
+        meetingRoomItemListFull = new ArrayList<>();
     }
 
     @NonNull

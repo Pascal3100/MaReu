@@ -2,6 +2,7 @@ package fr.plopez.mareu.view.add;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,56 +38,46 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
     private AddMeetingViewModel addMeetingViewModel;
 
-    private int hour,min;
-    private static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    private final TextInputEditText.OnEditorActionListener textListener =
+            new TextInputEditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                    String inputFieldText = v.getText().toString();
+                    Log.d("TAG", "-------- onEditorAction: inputFieldText =" + inputFieldText);
+
+                    if (v.getId() == fragAddMeetingActBinding.emailInputContent.getId()) {
+
+                        // Emails management
+                        addMeetingViewModel.addEmail(inputFieldText);
+
+                    } else if (v.getId() == fragAddMeetingActBinding.textInputSubjectContent.getId()) {
+
+                        // Subject management
+                        addMeetingViewModel.addSubject(inputFieldText);
+
+                    } else if (v.getId() == fragAddMeetingActBinding.roomSelectorMenu.getId()) {
+
+                        // Rooms management
+                        addMeetingViewModel.addRoom(inputFieldText);
+                    }
+
+                    return false;
+                }
+            };
 
     private AutoCompleteRoomSelectorMenuAdapter adapter;
+    private int hour, min;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
+     *
      * @return A new instance of fragment AddMeetingActivityFragment.
      */
     public static AddMeetingFragment newInstance() {
         return new AddMeetingFragment();
     }
-
-    private final TextInputEditText.OnEditorActionListener textListener = new TextInputEditText.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (v.getId() == fragAddMeetingActBinding.emailInputContent.getId()){
-                if (v.getText().toString().trim().matches(emailPattern)) {
-
-                    //Send email in the chip group container
-                    LayoutInflater inflater = getLayoutInflater();
-
-                    // TODO: corriger le null avec Nino
-                    Chip emailChip = (Chip) inflater.inflate(R.layout.email_chip, null,false);
-                    emailChip.setText(v.getText());
-                    emailChip.setOnCloseIconClickListener(AddMeetingFragment.this);
-                    fragAddMeetingActBinding.emailsChipGroup.addView(emailChip);
-
-                    // Clears the text edit area
-                    v.setText("");
-
-                } else {
-                    CustomToasts.showErrorToast(getContext(), "Email is not valid");
-                }
-            } else if (v.getId() == fragAddMeetingActBinding.textInputSubjectContent.getId()) {
-
-                if (v.getText().toString().isEmpty()){
-                    CustomToasts.showErrorToast(getContext(), "Subject can't be empty");
-                }
-            } else if (v.getId() == fragAddMeetingActBinding.roomSelectorMenu.getId()) {
-
-                if (!addMeetingViewModel.getRoomsNames().contains(v.getText().toString())){
-                    CustomToasts.showErrorToast(getContext(), "Select an existing room");
-                }
-            }
-
-            return false;
-        }
-    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -100,7 +90,10 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                 .get(AddMeetingViewModel.class);
 
         // Inflate the layout for this fragment
-        fragAddMeetingActBinding = FragmentAddMeetingActivityBinding.inflate(inflater, container, false);
+        fragAddMeetingActBinding = FragmentAddMeetingActivityBinding.inflate(
+                inflater,
+                container,
+                false);
         View view = fragAddMeetingActBinding.getRoot();
 
         // Initialize widgets
@@ -117,27 +110,40 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         // Set the save button behavior
         fragAddMeetingActBinding.saveButton.setOnClickListener(v -> {
 
-            String subject = fragAddMeetingActBinding.textInputSubjectContent.getText().toString();
-            String selectedRoom = fragAddMeetingActBinding.roomSelectorMenu.getText().toString();
-            String time = fragAddMeetingActBinding.timePickerText.getText().toString();
-            int nbEmails = fragAddMeetingActBinding.emailsChipGroup.getChildCount();
-
-            // Get all the emails in chips
-            int i = 0;
-            List<String> emails = new ArrayList<>();
-            while (i < nbEmails) {
-                Chip chip = (Chip) fragAddMeetingActBinding.emailsChipGroup.getChildAt(i);
-                emails.add(chip.getText().toString());
-                i++;
-            }
-
-            addMeetingViewModel.addMeeting(subject, time, selectedRoom, emails, nbEmails);
+            // Add meeting
+            addMeetingViewModel.addMeeting();
         });
+
+        // Observer for Chips
+        addMeetingViewModel.getEmailsListLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> emailsList) {
+
+                // Clear all chips
+                fragAddMeetingActBinding.emailsChipGroup.removeAllViews();
+
+                // Rebuild all chips
+                for (String email : emailsList) {
+                    LayoutInflater inflater = getLayoutInflater();
+                    Chip emailChip = (Chip) inflater.inflate(
+                            R.layout.email_chip,
+                            fragAddMeetingActBinding.emailsChipGroup,
+                            false);
+                    emailChip.setText(email);
+                    emailChip.setOnCloseIconClickListener(AddMeetingFragment.this);
+                    fragAddMeetingActBinding.emailsChipGroup.addView(emailChip);
+                }
+
+                // Clears the text edit area
+                fragAddMeetingActBinding.emailInputContent.setText("");
+            }
+        });
+
 
         return view;
     }
 
-    private void init(){
+    private void init() {
         // Initializing current time display
         Time time = new Time();
         hour = time.getCurrentHour();
@@ -145,47 +151,53 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
+        adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext());
+        fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
+
         addMeetingViewModel.getMeetingRoomItemList().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MeetingRoomItem>>() {
                     @Override
                     public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
-                        adapter = new AutoCompleteRoomSelectorMenuAdapter(
-                                requireContext(),
-                                meetingRoomItemList
-                        );
+                        adapter.clear();
+                        adapter.addAll(meetingRoomItemList);
                     }
                 });
 
-        fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
-
         // init observer
         addMeetingViewModel.getAddMeetingViewActionSingleLiveEvent().observe(
-            getViewLifecycleOwner(),
-            action -> {
-                switch (action) {
-                    case FINISH_ACTIVITY:
-                        getActivity().finish();
-                        break;
-                    case DISPLAY_INCORRECT_SUBJECT_MESSAGE:
-                    case DISPLAY_INCORRECT_ROOM_MESSAGE:
-                    case DISPLAY_INCORRECT_EMAIL_MESSAGE:
-                        CustomToasts.showErrorToast(getContext(), action.getMessage());
-                        break;
+                getViewLifecycleOwner(),
+                action -> {
+                    switch (action) {
+                        case FINISH_ACTIVITY:
+                            getActivity().finish();
+                            break;
+                        case DISPLAY_INCORRECT_SUBJECT_MESSAGE:
+                        case DISPLAY_INCORRECT_ROOM_MESSAGE:
+                        case DISPLAY_INCORRECT_EMAIL_MESSAGE:
+                        case DISPLAY_UNKNOWN_ROOM_MESSAGE:
+                        case DISPLAY_EMPTY_SUBJECT_MESSAGE:
+                        case DISPLAY_EMPTY_EMAIL_MESSAGE:
+                            CustomToasts.showErrorToast(getContext(), action.getMessage());
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
         );
     }
 
-    private void updateTimeText(){
-        fragAddMeetingActBinding.timePickerText.setText(String.format(Locale.getDefault(),
+    private void updateTimeText() {
+        String startTime = String.format(Locale.getDefault(),
                 "%02d:%02d",
                 hour,
-                min));
+                min);
+        fragAddMeetingActBinding.timePickerText.setText(startTime);
+        addMeetingViewModel.addStartTime(startTime);
     }
 
     // Pops timepicker
-    public void popTimePicker(){
+    public void popTimePicker() {
 
         //set filled clock icon
         fragAddMeetingActBinding.timePickerButton.setImageResource(R.drawable.ic_baseline_access_time_filled_32);
@@ -200,10 +212,10 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         };
 
         TimePickerDialog timePicker = new TimePickerDialog(this.getContext(), onTimeSetListener, time.getCurrentHour(), time.getCurrentMin(), true);
-        timePicker.setTitle("Please set meeting start time");
+        timePicker.setTitle(getString(R.string.meeting_time_picker_label_text));
         timePicker.show();
     }
-    
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -214,6 +226,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         Chip emailChip = (Chip) v;
+        addMeetingViewModel.removeEmail(emailChip.getText().toString());
         fragAddMeetingActBinding.emailsChipGroup.removeView(emailChip);
     }
 }

@@ -97,7 +97,7 @@ public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
         return roomFilterRepository.getMeetingRoomItemListLiveData();
     }
 
-    public List<MeetingTimeItem> getMeetingTimeItemList() {
-        return timeFilterRepository.getMeetingTimeItemListLiveData().getValue();
+    public LiveData<List<MeetingTimeItem>> getMeetingTimeItemList() {
+        return timeFilterRepository.getMeetingTimeItemListLiveData();
     }
 }
