@@ -45,17 +45,12 @@ public class RoomFilterRepository {
         return meetingRoomItemListMutableLiveData;
     }
 
-/*
-    public List<MeetingRoomItem> getMeetingRoomItemList() {
-        return meetingRoomItemsList;
-    }
-*/
-
     public void updateMeetingRoomItemList(List<MeetingRoomItem> modifiedMeetingRoomItemsList) {
         meetingRoomItemsList = modifiedMeetingRoomItemsList;
         meetingRoomItemListMutableLiveData.setValue(meetingRoomItemsList);
     }
 
+    // Get all rooms names
     public List<String> getRoomsNames() {
         return roomsRepositoryInstance.getRoomsNames();
     }

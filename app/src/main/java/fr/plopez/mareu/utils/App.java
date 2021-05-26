@@ -1,4 +1,4 @@
-package fr.plopez.mareu;
+package fr.plopez.mareu.utils;
 
 import android.app.Application;
 

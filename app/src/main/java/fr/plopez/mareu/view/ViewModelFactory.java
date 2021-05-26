@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import fr.plopez.mareu.App;
+import fr.plopez.mareu.utils.App;
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fr.plopez.mareu.data.model.Meeting;
+import fr.plopez.mareu.utils.FakeMeetingsGen;
 
 public class MeetingsRepository {
 
@@ -16,7 +17,7 @@ public class MeetingsRepository {
     private static RoomsRepository roomsRepositoryInstance;
 
     private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
-    private final List<Meeting> meetingList = new ArrayList<>();
+    private List<Meeting> meetingList = new ArrayList<>();
 
 
     private int lastGeneratedId = 0;
@@ -34,29 +35,6 @@ public class MeetingsRepository {
         meetingListMutableLiveData.setValue(meetingList);
     }
 
-    //Initialize meetings repo
-    private void setInitialMeetings() {
-        meetingList.add(new Meeting(
-                lastGeneratedId++,
-            "Mentorat with Nino",
-            "12:30",
-            roomsRepositoryInstance.getRoomByName("Flower"),
-            Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com"})));
-        meetingList.add(new Meeting(
-                lastGeneratedId++,
-            "Code review",
-            "9:30",
-            roomsRepositoryInstance.getRoomByName("Leaf"),
-            Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com"})));
-        meetingList.add(new Meeting(
-                lastGeneratedId++,
-            "JCVD Interview",
-            "11:00",
-            roomsRepositoryInstance.getRoomByName("Mushroom"),
-            Arrays.asList(new String[]{"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
-
-        updateMeetingListMutableLiveData();
-    }
 
     public LiveData<List<Meeting>> getMeetings() {
         return meetingListMutableLiveData;
@@ -66,7 +44,9 @@ public class MeetingsRepository {
         roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
 
         //Dummy meetings generation for dev purpose only
-        setInitialMeetings();
+        meetingList = FakeMeetingsGen.generateFakeMeetingList(roomsRepositoryInstance);
+        lastGeneratedId += meetingList.size();
+        updateMeetingListMutableLiveData();
     }
 
     // Add a new meeting
