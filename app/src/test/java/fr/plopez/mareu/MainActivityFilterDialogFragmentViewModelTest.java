@@ -1,5 +1,8 @@
 package fr.plopez.mareu;
 
+import android.app.Application;
+import android.content.Context;
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
@@ -8,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -24,15 +28,15 @@ import fr.plopez.mareu.data.model.Room;
 import fr.plopez.mareu.utils.FakeMeetingsGen;
 import fr.plopez.mareu.utils.LiveDataTestUtils;
 import fr.plopez.mareu.utils.TimeGen;
-import fr.plopez.mareu.view.main.MainActivityViewModel;
+import fr.plopez.mareu.view.main.filter_fragment_dialog.MainActivityFilterDialogFragmentViewModel;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
-import fr.plopez.mareu.view.model.MeetingViewState;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MainActivityViewModelTest {
+public class MainActivityFilterDialogFragmentViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -41,11 +45,18 @@ public class MainActivityViewModelTest {
     public RoomsRepository roomsRepository;
     private RoomFilterRepository roomFilterRepository;
     private TimeFilterRepository timeFilterRepository;
-    private MainActivityViewModel mainActivityViewModel;
+    private MainActivityFilterDialogFragmentViewModel mainActivityFilterDialogFragmentViewModel;
     private List<MeetingRoomItem> meetingRoomItemList;
     private List<MeetingTimeItem> meetingTimeItemList;
     private final MutableLiveData<List<MeetingRoomItem>> meetingRoomItemListMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<MeetingTimeItem>> meetingTimeItemListMutableLiveData = new MutableLiveData<>();
+
+    private final String MOCKED_SINGULAR_STRING = "MOCKED_SINGULAR_STRING";
+    private final String MOCKED_PLURAL_STRING = "MOCKED_PLURAL_STRING";
+
+    @Mock
+    Application mockContext;
+
 
     @Before
     public void setUp() {
@@ -90,9 +101,13 @@ public class MainActivityViewModelTest {
         timeFilterRepository = Mockito.mock(TimeFilterRepository.class);
         meetingTimeItemList = TimeGen.getAvailableTimes(8, 18);
 
+        when(mockContext.getString(R.string.filter_text_message_singular))
+                .thenReturn(MOCKED_SINGULAR_STRING);
+        when(mockContext.getString(R.string.filter_text_message_plural))
+                .thenReturn(MOCKED_PLURAL_STRING);
     }
 
-    // Test that list of meetings are correctly transformed into meetingViewState objects list
+    // Test that list of meetings are correctly not filtered and counted
     @Test
     public void test_nominal_case_no_filter() throws InterruptedException {
 
@@ -107,21 +122,22 @@ public class MainActivityViewModelTest {
                 .when(timeFilterRepository)
                 .getMeetingTimeItemListLiveData();
 
-        // Instantiate main Activity View Model
-        mainActivityViewModel = new MainActivityViewModel(
+        // Instantiate main Activity Dialog Fragment View Model
+        mainActivityFilterDialogFragmentViewModel = new MainActivityFilterDialogFragmentViewModel(
                 meetingsRepository,
                 roomFilterRepository,
-                timeFilterRepository);
+                timeFilterRepository,
+                mockContext);
 
         // When
-        List<MeetingViewState> result = LiveDataTestUtils
-                .getOrAwaitValue(mainActivityViewModel.getMainActivityViewStatesLiveData());
+        String result = LiveDataTestUtils
+                .getOrAwaitValue(mainActivityFilterDialogFragmentViewModel.getFilterDialogDynamicTextLiveData());
 
         // Then
-        assertEquals(result.size(), 3);
+        assertEquals(result, "3 "+MOCKED_PLURAL_STRING);
     }
 
-    // Test that list of meetings are correctly filtered by room
+    // Test that list of meetings are correctly filtered and counted by room
     @Test
     public void test_nominal_case_room_filter() throws InterruptedException {
 
@@ -139,21 +155,22 @@ public class MainActivityViewModelTest {
                 .when(timeFilterRepository)
                 .getMeetingTimeItemListLiveData();
 
-        // Instantiate main Activity View Model
-        mainActivityViewModel = new MainActivityViewModel(
+        // Instantiate main Activity Dialog Fragment View Model
+        mainActivityFilterDialogFragmentViewModel = new MainActivityFilterDialogFragmentViewModel(
                 meetingsRepository,
                 roomFilterRepository,
-                timeFilterRepository);
+                timeFilterRepository,
+                mockContext);
 
         // When
-        List<MeetingViewState> result = LiveDataTestUtils
-                .getOrAwaitValue(mainActivityViewModel.getMainActivityViewStatesLiveData());
+        String result = LiveDataTestUtils
+                .getOrAwaitValue(mainActivityFilterDialogFragmentViewModel.getFilterDialogDynamicTextLiveData());
 
         // Then
-        assertEquals(result.size(), 1);
+        assertEquals(result, "1 "+MOCKED_SINGULAR_STRING);
     }
 
-    // Test that list of meetings are correctly filtered by time
+    // Test that list of meetings are correctly filtered and counted by time
     @Test
     public void test_nominal_case_time_filter() throws InterruptedException {
 
@@ -172,21 +189,22 @@ public class MainActivityViewModelTest {
                 .when(timeFilterRepository)
                 .getMeetingTimeItemListLiveData();
 
-        // Instantiate main Activity View Model
-        mainActivityViewModel = new MainActivityViewModel(
+        // Instantiate main Activity Dialog Fragment View Model
+        mainActivityFilterDialogFragmentViewModel = new MainActivityFilterDialogFragmentViewModel(
                 meetingsRepository,
                 roomFilterRepository,
-                timeFilterRepository);
+                timeFilterRepository,
+                mockContext);
 
         // When
-        List<MeetingViewState> result = LiveDataTestUtils
-                .getOrAwaitValue(mainActivityViewModel.getMainActivityViewStatesLiveData());
+        String result = LiveDataTestUtils
+                .getOrAwaitValue(mainActivityFilterDialogFragmentViewModel.getFilterDialogDynamicTextLiveData());
 
         // Then
-        assertEquals(result.size(), 1);
+        assertEquals(result, "1 "+MOCKED_SINGULAR_STRING);
     }
 
-    // Test that list of meetings are correctly filtered by room and time
+    // Test that list of meetings are correctly filtered and counted by room and time
     @Test
     public void test_nominal_case_room_and_time_filter() throws InterruptedException {
 
@@ -207,16 +225,18 @@ public class MainActivityViewModelTest {
                 .when(timeFilterRepository)
                 .getMeetingTimeItemListLiveData();
 
-        // Instantiate main Activity View Model
-        mainActivityViewModel = new MainActivityViewModel(
+        // Instantiate main Activity Dialog Fragment View Model
+        mainActivityFilterDialogFragmentViewModel = new MainActivityFilterDialogFragmentViewModel(
                 meetingsRepository,
                 roomFilterRepository,
-                timeFilterRepository);
+                timeFilterRepository,
+                mockContext);
 
         // When
-        List<MeetingViewState> result = LiveDataTestUtils
-                .getOrAwaitValue(mainActivityViewModel.getMainActivityViewStatesLiveData());
+        String result = LiveDataTestUtils
+                .getOrAwaitValue(mainActivityFilterDialogFragmentViewModel.getFilterDialogDynamicTextLiveData());
 
         // Then
-        assertEquals(result.size(), 0);    }
+        assertEquals(result, "0 "+MOCKED_SINGULAR_STRING);
+    }
 }

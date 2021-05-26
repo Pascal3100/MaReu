@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import fr.plopez.mareu.utils.LiveDataTestUtils;
+
 import static org.junit.Assert.assertEquals;
 
 public class UserViewModelTest {

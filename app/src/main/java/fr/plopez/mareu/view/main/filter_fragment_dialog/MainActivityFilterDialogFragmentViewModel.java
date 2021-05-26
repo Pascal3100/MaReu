@@ -78,9 +78,9 @@ public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
         String toConcat = "";
 
         if (numberOfFilteredMeeting > 1) {
-            toConcat = app.getString(R.string.filter_text_message_singular);
-        } else {
             toConcat = app.getString(R.string.filter_text_message_plural);
+        } else {
+            toConcat = app.getString(R.string.filter_text_message_singular);
         }
         return numberOfFilteredMeeting.toString() + " " + toConcat;
     }
