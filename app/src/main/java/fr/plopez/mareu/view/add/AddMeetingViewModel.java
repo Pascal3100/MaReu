@@ -1,7 +1,5 @@
 package fr.plopez.mareu.view.add;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,13 +22,13 @@ public class AddMeetingViewModel extends ViewModel {
     private final SingleLiveEvent<AddMeetingViewAction> addMeetingViewActionSingleLiveEvent = new SingleLiveEvent<>();
 
     // LiveData for emails management
-    private MutableLiveData<List<String>> emailsListMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> emailsListMutableLiveData = new MutableLiveData<>();
 
     // Meeting hosted data
     private String subject = "";
     private String startTime = "";
     private String meetingRoom = "";
-    private List<String> emailsList = new ArrayList<>();
+    private final List<String> emailsList = new ArrayList<>();
 
     public AddMeetingViewModel(MeetingsRepository meetingsRepository,
                                RoomFilterRepository roomFilterRepository) {
@@ -62,38 +60,6 @@ public class AddMeetingViewModel extends ViewModel {
         }
     }
 
-    // Provides rooms items list
-    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList() {
-        return roomFilterRepository.getMeetingRoomItemListLiveData();
-    }
-
-    // Emails LiveData getter
-    public LiveData<List<String>> getEmailsListLiveData() {
-        return emailsListMutableLiveData;
-    }
-
-    // Add Email
-    public void addEmail(String email) {
-
-        // Email pattern to check
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
-        if (checkIfStringIsEmpty(email)) {
-            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_EMPTY_EMAIL_MESSAGE);
-        } else if (!email.trim().matches(emailPattern)) {
-            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);
-        } else {
-            emailsList.add(email);
-            emailsListMutableLiveData.setValue(emailsList);
-        }
-    }
-
-    // Remove Email
-    public void removeEmail(String email) {
-        emailsList.remove(email);
-        emailsListMutableLiveData.setValue(emailsList);
-    }
-
     // Add Subject
     public void addSubject(String inputFieldText) {
         if (checkIfStringIsEmpty(inputFieldText)) {
@@ -118,12 +84,41 @@ public class AddMeetingViewModel extends ViewModel {
         this.startTime = startTime;
     }
 
+    // Add Email
+    public void addEmail(String email) {
+
+        // Email pattern to check
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        if (checkIfStringIsEmpty(email)) {
+            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_EMPTY_EMAIL_MESSAGE);
+        } else if (!email.trim().matches(emailPattern)) {
+            addMeetingViewActionSingleLiveEvent.setValue(AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE);
+        } else {
+            emailsList.add(email);
+            emailsListMutableLiveData.setValue(emailsList);
+        }
+    }
+
+    // Remove Email
+    public void removeEmail(String email) {
+        emailsList.remove(email);
+        emailsListMutableLiveData.setValue(emailsList);
+    }
+
+
+    // Provides rooms items list
+    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList() {
+        return roomFilterRepository.getMeetingRoomItemListLiveData();
+    }
+
+    // Emails LiveData getter
+    public LiveData<List<String>> getEmailsListLiveData() {
+        return emailsListMutableLiveData;
+    }
+
     // Empty Strings checker util
     private boolean checkIfStringIsEmpty(String inputString) {
-        Log.d("TAG", "checkIfStringIsEmpty: "+inputString);
-        if (inputString.isEmpty() || inputString == null || inputString == "") {
-            return true;
-        }
-        return false;
+        return inputString == null || inputString.isEmpty() || inputString == "";
     }
 }

@@ -123,8 +123,9 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                 fragAddMeetingActBinding.emailsChipGroup.removeAllViews();
 
                 // Rebuild all chips
+                LayoutInflater inflater = getLayoutInflater();
+
                 for (String email : emailsList) {
-                    LayoutInflater inflater = getLayoutInflater();
                     Chip emailChip = (Chip) inflater.inflate(
                             R.layout.email_chip,
                             fragAddMeetingActBinding.emailsChipGroup,

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 
@@ -20,19 +19,19 @@ public class FakeMeetingsGen {
                 "Mentorat with Nino",
                 "12:30",
                 roomsRepositoryInstance.getRoomByName("Flower"),
-                Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com"})));
+                Arrays.asList("pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com")));
         meetingList.add(new Meeting(
                 lastGeneratedId++,
                 "Code review",
                 "9:30",
                 roomsRepositoryInstance.getRoomByName("Leaf"),
-                Arrays.asList(new String[]{"pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com"})));
+                Arrays.asList("pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com")));
         meetingList.add(new Meeting(
                 lastGeneratedId++,
                 "JCVD Interview",
                 "11:00",
                 roomsRepositoryInstance.getRoomByName("Mushroom"),
-                Arrays.asList(new String[]{"jcvd@gmail.com", "anthony.delcey.fr@gmail.com"})));
+                Arrays.asList("jcvd@gmail.com", "anthony.delcey.fr@gmail.com")));
 
         return meetingList;
     }

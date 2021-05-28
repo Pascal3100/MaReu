@@ -1,7 +1,6 @@
 package fr.plopez.mareu;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
@@ -10,13 +9,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import fr.plopez.mareu.data.MeetingsRepository;
@@ -31,9 +30,6 @@ import fr.plopez.mareu.utils.TimeGen;
 import fr.plopez.mareu.view.main.filter_fragment_dialog.MainActivityFilterDialogFragmentViewModel;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MainActivityFilterDialogFragmentViewModelTest {
@@ -72,14 +68,6 @@ public class MainActivityFilterDialogFragmentViewModelTest {
         Mockito.doReturn(new Room("Mushroom", R.drawable.ic_room_mushroom))
                 .when(roomsRepository)
                 .getRoomByName("Mushroom");
-/*
-        Mockito.doReturn(new Room("Coin", R.drawable.ic_room_coin))
-                .when(roomsRepository)
-                .getRoomByName("Coin");
-        Mockito.doReturn(Arrays.asList("Flower", "Leaf", "Mushroom", "Coin"))
-                .when(roomsRepository)
-                .getRoomsNames();
-*/
 
         // Mocking the meetings repository
         meetingsRepository = Mockito.mock(MeetingsRepository.class);
