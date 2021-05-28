@@ -6,7 +6,9 @@
     android:fillViewport="true">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/filter_fragment_container"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.main.filter_fragment_dialog.MainActivityFilterDialogFragment">

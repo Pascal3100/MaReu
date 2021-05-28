@@ -11,5 +11,12 @@
     <string name="room_filter_label_text">Room filter</string>
     <string name="time_filter_label_text">Time filter</string>
     <string name="meeting_time_picker_label_text">Please set meeting start time</string>
-    <string name="sentence">Bonjour, je m\'appelle %s, j\'ai %d ans !</string>
+    <string name="meeting_subject_hint">Meeting subject</string>
+    <string name="start_time_text_prefix">Start time :</string>
+    <string name="room_selector_text_hint">Select meeting room</string>
+    <string name="email_input_text_hint">Enter email adress</string>
+    <string name="add_meeting_icon_description">add meeting icon</string>
+    <string name="clock_picker_state_icon">clock picker state icon</string>
+    <string name="meeting_view_holder_room_icon_description">meeting view holder room icon</string>
+    <string name="meeting_view_holder_trash_icon_description">meeting view holder trash icon</string>
 </resources>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/meeting_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +11,7 @@
     android:paddingVertical="16dp">
 
     <ImageView
+        android:contentDescription="@string/meeting_view_holder_room_icon_description"
         android:id="@+id/fragment_main_activity_view_holder_room_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -55,24 +58,27 @@
 
             <TextView
                 android:id="@+id/fragment_main_activity_view_holder_meeting_emails_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textSize="14sp"
                 android:textStyle="normal"
-                tools:text="email@lamzone.fr, email@lamzone.fr, email@lamzone.fr"></TextView>
+                tools:text="email@lamzone.fr, email@lamzone.fr, email@lamzone.fr">
+
+            </TextView>
         </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageButton
+        android:contentDescription="@string/meeting_view_holder_trash_icon_description"
         android:id="@+id/fragment_main_activity_view_holder_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/ic_baseline_delete_32"
-        android:tint="@color/redPinkish"
+        app:tint="@color/redPinkish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">

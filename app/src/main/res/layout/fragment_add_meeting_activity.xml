@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="32dp"
@@ -19,6 +17,7 @@
             android:id="@+id/image"
             android:layout_width="128dp"
             android:layout_height="128dp"
+            android:contentDescription="@string/add_meeting_icon_description"
             android:src="@drawable/add_meeting_img"
             app:layout_constraintBottom_toTopOf="@+id/text_input_subject"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fields_standard_margin"
-            android:hint="Meeting subject"
+            android:hint="@string/meeting_subject_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image">
@@ -63,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/fields_standard_margin"
                 android:paddingVertical="8dp"
-                android:text="Start time :"
+                android:text="@string/start_time_text_prefix"
                 android:textSize="@dimen/fields_standard_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,6 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
+                android:contentDescription="@string/clock_picker_state_icon"
                 android:scaleType="center"
                 android:scaleX="1.25"
                 android:scaleY="1.25"
@@ -113,7 +113,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fields_standard_margin"
-            android:hint="Select meeting room"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clock_container">
@@ -125,7 +124,8 @@
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:lines="1"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:hint="@string/room_selector_text_hint"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -142,7 +142,7 @@
                 android:id="@+id/email_input_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter email adress"
+                android:hint="@string/email_input_text_hint"
                 android:imeOptions="actionDone"
                 android:inputType="textEmailAddress"
                 android:lines="1"
