@@ -61,14 +61,6 @@ public class MainActivityViewModelTest {
         Mockito.doReturn(new Room("Mushroom", R.drawable.ic_room_mushroom))
                 .when(roomsRepository)
                 .getRoomByName("Mushroom");
-/*
-        Mockito.doReturn(new Room("Coin", R.drawable.ic_room_coin))
-                .when(roomsRepository)
-                .getRoomByName("Coin");
-        Mockito.doReturn(Arrays.asList("Flower", "Leaf", "Mushroom", "Coin"))
-                .when(roomsRepository)
-                .getRoomsNames();
-*/
 
         // Mocking the meetings repository
         meetingsRepository = Mockito.mock(MeetingsRepository.class);
