@@ -76,7 +76,7 @@ public class MainActivityTest {
     @Test
     public void jump_to_filter_fragment_test() {
         // click on the filter action button to load the filter fragment
-        // don't find any solution...
+        onView(withId(R.id.sort_meetings)).perform(click());
 
         // verify that the add activity is correctly loaded
         onView(withId(R.id.filter_fragment_container))
@@ -86,7 +86,7 @@ public class MainActivityTest {
     @Test
     public void jump_to_filter_fragment_and_back_to_main_activity_test() {
         // click on the filter action button to load the filter fragment
-        // don't find any solution...
+        onView(withId(R.id.sort_meetings)).perform(click());
 
         // click on close button
         onView(withId(R.id.closeFilterDialogButton)).perform(click());
