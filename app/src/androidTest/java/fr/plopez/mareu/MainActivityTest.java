@@ -20,11 +20,13 @@ import fr.plopez.mareu.utils.RecyclerViewItemCountAssertion;
 import fr.plopez.mareu.view.main.MainActivity;
 
 import static androidx.test.espresso.Espresso.onView;
+
+import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.notNullValue;
@@ -64,8 +66,7 @@ public class MainActivityTest {
                 .perform(click());
 
         // click on back navigation icon
-        // Don't works...
-        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+        onView(withId(R.id.add_meeting_activity_app_bar)).perform(pressBack());
 
         // verify that the add activity is correctly loaded
         onView(withId(R.id.main_activity_container))
