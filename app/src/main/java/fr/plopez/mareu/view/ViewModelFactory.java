@@ -10,7 +10,7 @@ import fr.plopez.mareu.data.RoomFilterRepository;
 import fr.plopez.mareu.data.TimeFilterRepository;
 import fr.plopez.mareu.view.add.AddMeetingViewModel;
 import fr.plopez.mareu.view.main.MainActivityViewModel;
-import fr.plopez.mareu.view.main.filter_fragment_dialog.MainActivityFilterDialogFragmentViewModel;
+import fr.plopez.mareu.view.main.filter_fragment_dialog.FilterDialogFragmentViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -39,8 +39,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new MainActivityViewModel(meetingsRepository, roomFilterRepository, timeFilterRepository);
         } else if (modelClass.isAssignableFrom(AddMeetingViewModel.class)) {
             return (T) new AddMeetingViewModel(meetingsRepository, roomFilterRepository);
-        } else if (modelClass.isAssignableFrom(MainActivityFilterDialogFragmentViewModel.class)) {
-            return (T) new MainActivityFilterDialogFragmentViewModel(
+        } else if (modelClass.isAssignableFrom(FilterDialogFragmentViewModel.class)) {
+            return (T) new FilterDialogFragmentViewModel(
                     meetingsRepository,
                     roomFilterRepository,
                     timeFilterRepository,

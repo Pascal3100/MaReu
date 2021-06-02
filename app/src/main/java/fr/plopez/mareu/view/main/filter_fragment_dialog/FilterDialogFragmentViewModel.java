@@ -19,7 +19,7 @@ import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
 
 
-public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
+public class FilterDialogFragmentViewModel extends ViewModel {
 
     private static final String TAG = "MainActivityFilterDialogFragmentViewModel";
 
@@ -30,10 +30,10 @@ public class MainActivityFilterDialogFragmentViewModel extends ViewModel {
 
     private final MediatorLiveData<String> numberOfFilteredMeetingMediatorLiveData = new MediatorLiveData<>();
 
-    public MainActivityFilterDialogFragmentViewModel(MeetingsRepository meetingsRepository,
-                                                     RoomFilterRepository roomFilterRepository,
-                                                     TimeFilterRepository timeFilterRepository,
-                                                     Application app) {
+    public FilterDialogFragmentViewModel(MeetingsRepository meetingsRepository,
+                                         RoomFilterRepository roomFilterRepository,
+                                         TimeFilterRepository timeFilterRepository,
+                                         Application app) {
         this.meetingsRepository = meetingsRepository;
         this.roomFilterRepository = roomFilterRepository;
         this.timeFilterRepository = timeFilterRepository;

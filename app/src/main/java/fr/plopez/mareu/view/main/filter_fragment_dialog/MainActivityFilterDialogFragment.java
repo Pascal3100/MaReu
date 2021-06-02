@@ -30,7 +30,7 @@ import fr.plopez.mareu.view.model.MeetingTimeItem;
 public class MainActivityFilterDialogFragment extends DialogFragment implements OnModifyFilters {
 
     private FragmentFilterDialogBinding fragmentFilterDialogBinding;
-    private MainActivityFilterDialogFragmentViewModel filterDialogViewModel;
+    private FilterDialogFragmentViewModel filterDialogViewModel;
     private OnModifyFilters onModifyFilters;
 
     public MainActivityFilterDialogFragment() {
@@ -53,7 +53,7 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
         filterDialogViewModel = new ViewModelProvider(
                 this,
                 ViewModelFactory.getInstance())
-                .get(MainActivityFilterDialogFragmentViewModel.class);
+                .get(FilterDialogFragmentViewModel.class);
 
         LinearLayoutManager roomFilterLinearLayoutManager = new LinearLayoutManager(getContext());
         roomFilterLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
