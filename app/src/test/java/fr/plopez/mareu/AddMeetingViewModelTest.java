@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -14,8 +15,6 @@ import java.util.List;
 
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
-import fr.plopez.mareu.data.RoomsRepository;
-import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Room;
 import fr.plopez.mareu.utils.LiveDataTestUtils;
 import fr.plopez.mareu.view.add.AddMeetingViewAction;
@@ -32,38 +31,28 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class AddMeetingViewModelTest {
 
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
+    // constants
     private final String CORRECT_STRING_INPUT = "CORRECT_STRING_INPUT";
     private final String EMPTY_STRING_INPUT = "";
     private final String CORRECT_ROOM_INPUT = "Mushroom";
-    private final int FAKE_MEETING_ID = 1;
-    private final Room FAKE_MEETING_ROOM = new Room(CORRECT_ROOM_INPUT, R.drawable.ic_room_mushroom);
     private final List<String> FAKE_MEETING_EMAIL_LIST = Arrays.asList("pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com");
 
+    // rules
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
+    // mocks
+    @Mock
     public MeetingsRepository meetingsRepository;
-    public RoomsRepository roomsRepository;
+    @Mock
+    public RoomFilterRepository roomFilterRepository;
+
+    // class variables
     private AddMeetingViewModel addMeetingViewModel;
 
-    private final Meeting FAKE_MEETING_OBJECT = new Meeting(
-            FAKE_MEETING_ID,
-            CORRECT_STRING_INPUT,
-            CORRECT_STRING_INPUT,
-            FAKE_MEETING_ROOM,
-            FAKE_MEETING_EMAIL_LIST);
 
     @Before
     public void setUp() {
-
-        // Mocking the rooms repository
-        roomsRepository = Mockito.mock(RoomsRepository.class);
-
-        // Mocking the meetings repository
-        meetingsRepository = Mockito.mock(MeetingsRepository.class);
-
-        // Mocking the rooms filter repository
-        RoomFilterRepository roomFilterRepository = Mockito.mock(RoomFilterRepository.class);
 
         Mockito.doReturn(new Room("Mushroom", R.drawable.ic_room_mushroom))
                 .when(roomFilterRepository)
