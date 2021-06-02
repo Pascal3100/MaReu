@@ -1,7 +1,6 @@
 package fr.plopez.mareu;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,29 +23,35 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class MeetingsRepositoryTest {
 
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-    private MeetingsRepository meetingsRepository;
-
-
+    // constants
     private final String CORRECT_STRING_INPUT = "CORRECT_STRING_INPUT";
     private final String CORRECT_ROOM_INPUT = "Mushroom";
     private final int FAKE_MEETING_ID = 1;
     private final Room FAKE_MEETING_ROOM = new Room(CORRECT_ROOM_INPUT, R.drawable.ic_room_mushroom);
     private final List<String> FAKE_MEETING_EMAIL_LIST = Arrays.asList("pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com");
-
     private final Meeting FAKE_MEETING_OBJECT = new Meeting(
-            FAKE_MEETING_ID,
-            CORRECT_STRING_INPUT,
-            CORRECT_STRING_INPUT,
-            FAKE_MEETING_ROOM,
-            FAKE_MEETING_EMAIL_LIST);
+                          FAKE_MEETING_ID,
+                          CORRECT_STRING_INPUT,
+                          CORRECT_STRING_INPUT,
+                          FAKE_MEETING_ROOM,
+                          FAKE_MEETING_EMAIL_LIST);
+
+    // rules
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
+    // mocks
+
+
+    // class variables
+    private MeetingsRepository meetingsRepository;
+    private int numberOfMeetings = 0;
+
 
     @Before
     public void setUp() {
-
         meetingsRepository = MeetingsRepository.getMeetingsRepositoryInstance();
+        numberOfMeetings = meetingsRepository.getMeetings().getValue().size();
     }
 
     @Test
@@ -60,20 +65,21 @@ public class MeetingsRepositoryTest {
                 .getOrAwaitValue(meetingsRepository.getMeetings());
 
         // Then
-        assertEquals(4, result.size());
+        assertEquals(numberOfMeetings +1, result.size());
     }
 
     @Test
     public void remove_meeting_nominal_case_test() throws InterruptedException {
+
         // Given
-        meetingsRepository.deleteMeeting(FAKE_MEETING_OBJECT.getId());
+        meetingsRepository.deleteMeeting(meetingsRepository.getMeetings().getValue().get(0).getId());
 
         // When
         List<Meeting> result = LiveDataTestUtils
                 .getOrAwaitValue(meetingsRepository.getMeetings());
 
         // Then
-        assertEquals(3, result.size());
+        assertEquals(numberOfMeetings -1, result.size());
     }
 
     @Test
@@ -88,7 +94,7 @@ public class MeetingsRepositoryTest {
                 .getOrAwaitValue(meetingsRepository.getMeetings());
 
         // Then
-        assertEquals(3, result.size());
+        assertEquals(numberOfMeetings, result.size());
     }
 
     @After
