@@ -42,12 +42,11 @@ public class MainActivityTest {
     private static final String FILTER_DIALOG_MATCH_TEXT = "1 " + ApplicationProvider.getApplicationContext().getString(R.string.filter_text_message_singular);
 
     @Rule
-    public ActivityScenarioRule mActivityRule = new ActivityScenarioRule(MainActivity.class);
+    public ActivityScenario<MainActivity> mActivityRule = new ActivityScenarioRule<>(MainActivity.class).getScenario();
 
     @Before
     public void setUp() {
-        ActivityScenario activity = mActivityRule.getScenario();
-        assertThat(activity, notNullValue());
+        assertThat(mActivityRule, notNullValue());
     }
 
     @Test
