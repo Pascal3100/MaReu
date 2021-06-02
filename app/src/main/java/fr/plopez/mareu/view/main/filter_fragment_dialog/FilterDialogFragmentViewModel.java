@@ -21,9 +21,6 @@ import fr.plopez.mareu.view.model.MeetingTimeItem;
 
 public class FilterDialogFragmentViewModel extends ViewModel {
 
-    private static final String TAG = "MainActivityFilterDialogFragmentViewModel";
-
-    private final MeetingsRepository meetingsRepository;
     private final RoomFilterRepository roomFilterRepository;
     private final TimeFilterRepository timeFilterRepository;
     private final Application app;
@@ -34,7 +31,6 @@ public class FilterDialogFragmentViewModel extends ViewModel {
                                          RoomFilterRepository roomFilterRepository,
                                          TimeFilterRepository timeFilterRepository,
                                          Application app) {
-        this.meetingsRepository = meetingsRepository;
         this.roomFilterRepository = roomFilterRepository;
         this.timeFilterRepository = timeFilterRepository;
         this.app = app;
@@ -44,19 +40,13 @@ public class FilterDialogFragmentViewModel extends ViewModel {
         LiveData<List<MeetingTimeItem>> timeFilterLiveData = timeFilterRepository.getMeetingTimeItemListLiveData();
 
         // Add meeting list to mediatorLiveData
-        numberOfFilteredMeetingMediatorLiveData.addSource(meetingsLiveData, meetingsLiveData1 -> {
-            combine(meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue());
-        });
+        numberOfFilteredMeetingMediatorLiveData.addSource(meetingsLiveData, meetingsLiveData1 -> combine(meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue()));
 
         // Add room filter to mediatorLiveData
-        numberOfFilteredMeetingMediatorLiveData.addSource(roomFilterLiveData, meetingRoomItemList -> {
-            combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue());
-        });
+        numberOfFilteredMeetingMediatorLiveData.addSource(roomFilterLiveData, meetingRoomItemList -> combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue()));
 
         // Add time filter to mediatorLiveData
-        numberOfFilteredMeetingMediatorLiveData.addSource(timeFilterLiveData, meetingTimeItemList -> {
-            combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList);
-        });
+        numberOfFilteredMeetingMediatorLiveData.addSource(timeFilterLiveData, meetingTimeItemList -> combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList));
     }
 
     private void combine(@Nullable List<Meeting> meetingsList,
@@ -75,7 +65,7 @@ public class FilterDialogFragmentViewModel extends ViewModel {
     }
 
     private String mapNumberOfFilteredMeetingToString(Integer numberOfFilteredMeeting) {
-        String toConcat = "";
+        String toConcat;
 
         if (numberOfFilteredMeeting > 1) {
             toConcat = app.getString(R.string.filter_text_message_plural);

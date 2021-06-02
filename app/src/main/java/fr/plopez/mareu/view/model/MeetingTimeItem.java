@@ -17,10 +17,6 @@ public class MeetingTimeItem {
         return time.split(":")[0];
     }
 
-    public String getMinutes() {
-        return time.split(":")[1];
-    }
-
     public Boolean isChecked() {
         return isChecked;
     }

@@ -21,14 +21,10 @@ import fr.plopez.mareu.view.model.MeetingViewState;
 
 public class MainActivityViewModel extends ViewModel {
 
-    private static final String TAG = "MainActivityViewModel";
-
     private static final String RESUME_SEPARATOR = " - ";
     private static final String EMAIL_SEPARATOR = ", ";
 
     private final MeetingsRepository meetingsRepository;
-    private final RoomFilterRepository roomFilterRepository;
-    private final TimeFilterRepository timeFilterRepository;
 
     private final MediatorLiveData<List<Meeting>> filteredMeetingListMediatorLiveData = new MediatorLiveData<>();
 
@@ -36,27 +32,25 @@ public class MainActivityViewModel extends ViewModel {
                                  RoomFilterRepository roomFilterRepository,
                                  TimeFilterRepository timeFilterRepository) {
         this.meetingsRepository = meetingsRepository;
-        this.roomFilterRepository = roomFilterRepository;
-        this.timeFilterRepository = timeFilterRepository;
 
         LiveData<List<Meeting>> meetingsLiveData = meetingsRepository.getMeetings();
         LiveData<List<MeetingRoomItem>> roomFilterLiveData = roomFilterRepository.getMeetingRoomItemListLiveData();
         LiveData<List<MeetingTimeItem>> timeFilterLiveData = timeFilterRepository.getMeetingTimeItemListLiveData();
 
         // Add meeting list to mediatorLiveData
-        filteredMeetingListMediatorLiveData.addSource(meetingsLiveData, meetingsLiveData1 -> {
-            combine(meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue());
-        });
+        filteredMeetingListMediatorLiveData.addSource(
+                meetingsLiveData, meetingsLiveData1 -> combine(
+                        meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue()));
 
         // Add room filter to mediatorLiveData
-        filteredMeetingListMediatorLiveData.addSource(roomFilterLiveData, meetingRoomItemList -> {
-            combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue());
-        });
+        filteredMeetingListMediatorLiveData.addSource(
+                roomFilterLiveData, meetingRoomItemList -> combine(
+                        meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue()));
 
         // Add time filter to mediatorLiveData
-        filteredMeetingListMediatorLiveData.addSource(timeFilterLiveData, meetingTimeItemList -> {
-            combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList);
-        });
+        filteredMeetingListMediatorLiveData.addSource(
+                timeFilterLiveData, meetingTimeItemList -> combine(
+                        meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList));
     }
 
     private void combine(@Nullable List<Meeting> meetingsList,

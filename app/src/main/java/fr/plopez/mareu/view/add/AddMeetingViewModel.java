@@ -119,6 +119,6 @@ public class AddMeetingViewModel extends ViewModel {
 
     // Empty Strings checker util
     private boolean checkIfStringIsEmpty(String inputString) {
-        return inputString == null || inputString.isEmpty() || inputString == "";
+        return inputString == null || inputString.isEmpty();
     }
 }

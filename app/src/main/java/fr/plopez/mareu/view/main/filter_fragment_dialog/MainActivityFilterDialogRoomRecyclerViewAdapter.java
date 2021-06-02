@@ -33,7 +33,6 @@ public class MainActivityFilterDialogRoomRecyclerViewAdapter
     @NonNull
     @Override
     public MainActivityFilterDialogRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         // Inflate the custom layout

@@ -27,7 +27,7 @@ public class FakeMeetingsGen {
                 roomsRepositoryInstance.getRoomByName("Leaf"),
                 Arrays.asList("pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com")));
         meetingList.add(new Meeting(
-                lastGeneratedId++,
+                lastGeneratedId,
                 "JCVD Interview",
                 "11:00",
                 roomsRepositoryInstance.getRoomByName("Mushroom"),

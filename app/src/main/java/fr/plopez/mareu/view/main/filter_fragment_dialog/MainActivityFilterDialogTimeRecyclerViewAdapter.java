@@ -1,6 +1,5 @@
 package fr.plopez.mareu.view.main.filter_fragment_dialog;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ public class MainActivityFilterDialogTimeRecyclerViewAdapter
     @NonNull
     @Override
     public MainActivityFilterDialogTimeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         // Inflate the custom layout
@@ -44,12 +42,9 @@ public class MainActivityFilterDialogTimeRecyclerViewAdapter
         holder.timeText.setText(currentTime.getTime());
         holder.timeCheckBox.setChecked(currentTime.isChecked());
 
-        holder.timeCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                meetingTimeItemList.get(holder.getBindingAdapterPosition()).setChecked(holder.timeCheckBox.isChecked());
-                onModifyFilters.onTimeFilterModify(meetingTimeItemList);
-            }
+        holder.timeCheckBox.setOnClickListener(v -> {
+            meetingTimeItemList.get(holder.getBindingAdapterPosition()).setChecked(holder.timeCheckBox.isChecked());
+            onModifyFilters.onTimeFilterModify(meetingTimeItemList);
         });
     }
 

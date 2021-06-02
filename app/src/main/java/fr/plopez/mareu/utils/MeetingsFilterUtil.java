@@ -17,6 +17,7 @@ public class MeetingsFilterUtil {
         List<Meeting> filteredMeetingsList;
 
         // Exclusion management
+        assert meetingsList != null;
         if (meetingsList.size() < 2 || meetingRoomItemList == null || meetingTimeItemList == null) {
             return meetingsList;
         } else {

@@ -11,20 +11,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.List;
 import java.util.Locale;
 
 import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
 import fr.plopez.mareu.view.ViewModelFactory;
-import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.view_utils.AutoCompleteRoomSelectorMenuAdapter;
 import fr.plopez.mareu.view.view_utils.CustomToasts;
 
@@ -115,29 +112,26 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         });
 
         // Observer for Chips
-        addMeetingViewModel.getEmailsListLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> emailsList) {
+        addMeetingViewModel.getEmailsListLiveData().observe(getViewLifecycleOwner(), emailsList -> {
 
-                // Clear all chips
-                fragAddMeetingActBinding.emailsChipGroup.removeAllViews();
+            // Clear all chips
+            fragAddMeetingActBinding.emailsChipGroup.removeAllViews();
 
-                // Rebuild all chips
-                LayoutInflater inflater = getLayoutInflater();
+            // Rebuild all chips
+            LayoutInflater inflater1 = getLayoutInflater();
 
-                for (String email : emailsList) {
-                    Chip emailChip = (Chip) inflater.inflate(
-                            R.layout.email_chip,
-                            fragAddMeetingActBinding.emailsChipGroup,
-                            false);
-                    emailChip.setText(email);
-                    emailChip.setOnCloseIconClickListener(AddMeetingFragment.this);
-                    fragAddMeetingActBinding.emailsChipGroup.addView(emailChip);
-                }
-
-                // Clears the text edit area
-                fragAddMeetingActBinding.emailInputContent.setText("");
+            for (String email : emailsList) {
+                Chip emailChip = (Chip) inflater1.inflate(
+                        R.layout.email_chip,
+                        fragAddMeetingActBinding.emailsChipGroup,
+                        false);
+                emailChip.setText(email);
+                emailChip.setOnCloseIconClickListener(AddMeetingFragment.this);
+                fragAddMeetingActBinding.emailsChipGroup.addView(emailChip);
             }
+
+            // Clears the text edit area
+            fragAddMeetingActBinding.emailInputContent.setText("");
         });
 
 
@@ -157,12 +151,9 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         addMeetingViewModel.getMeetingRoomItemList().observe(
                 getViewLifecycleOwner(),
-                new Observer<List<MeetingRoomItem>>() {
-                    @Override
-                    public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
-                        adapter.clear();
-                        adapter.addAll(meetingRoomItemList);
-                    }
+                meetingRoomItemList -> {
+                    adapter.clear();
+                    adapter.addAll(meetingRoomItemList);
                 });
 
         // init observer

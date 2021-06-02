@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import fr.plopez.mareu.data.model.Meeting;
@@ -14,7 +13,6 @@ import fr.plopez.mareu.utils.FakeMeetingsGen;
 public class MeetingsRepository {
 
     private static MeetingsRepository MeetingsRepositoryInstance;
-    private static RoomsRepository roomsRepositoryInstance;
 
     private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
     private List<Meeting> meetingList = new ArrayList<>();
@@ -41,7 +39,7 @@ public class MeetingsRepository {
     }
 
     private void initRepo() {
-        roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
+        RoomsRepository roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
 
         //Dummy meetings generation for dev purpose only
         meetingList = FakeMeetingsGen.generateFakeMeetingList(roomsRepositoryInstance);

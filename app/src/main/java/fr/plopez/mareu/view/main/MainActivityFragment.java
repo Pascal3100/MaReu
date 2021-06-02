@@ -16,14 +16,7 @@ import fr.plopez.mareu.databinding.MainActivityFragmentBinding;
 import fr.plopez.mareu.view.ViewModelFactory;
 import fr.plopez.mareu.view.model.MeetingViewState;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainActivityFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MainActivityFragment extends Fragment implements DeleteMeetingListener {
-
-    private static final String TAG = "AddMeetingActivityFragment";
 
     private MainActivityFragmentRecyclerViewAdapter adapter;
     private MainActivityViewModel mainActivityViewModel;
@@ -65,7 +58,7 @@ public class MainActivityFragment extends Fragment implements DeleteMeetingListe
                 ViewModelFactory.getInstance())
                     .get(MainActivityViewModel.class);
 
-        adapter = new MainActivityFragmentRecyclerViewAdapter((DeleteMeetingListener) this);
+        adapter = new MainActivityFragmentRecyclerViewAdapter(this);
 
         mainActivityViewModel.getMainActivityViewStatesLiveData().observe(this, meetingViewStates -> adapter.submitList(meetingViewStates));
     }
