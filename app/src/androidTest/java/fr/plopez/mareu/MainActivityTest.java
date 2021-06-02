@@ -42,7 +42,7 @@ public class MainActivityTest {
     private static final String FILTER_DIALOG_MATCH_TEXT = "1 " + ApplicationProvider.getApplicationContext().getString(R.string.filter_text_message_singular);
 
     @Rule
-    public ActivityScenario<MainActivity> mActivityRule = new ActivityScenarioRule<>(MainActivity.class).getScenario();
+    public final ActivityScenario<MainActivity> mActivityRule = new ActivityScenarioRule<>(MainActivity.class).getScenario();
 
     @Before
     public void setUp() {

@@ -22,7 +22,7 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     private DropDownItemBinding dropDownItemBinding;
 
     // Saves the list of items because of the filtering operations
-    private List<MeetingRoomItem> meetingRoomItemListFull;
+    private final List<MeetingRoomItem> meetingRoomItemListFull;
 
     public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context) {
         super(context, resource);
@@ -90,9 +90,7 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             clear();
-
-            // TODO : corriger le LIST avec Nino
-            addAll((List) results.values);
+            addAll((List<MeetingRoomItem>) results.values);
             notifyDataSetChanged();
         }
 

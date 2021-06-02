@@ -19,6 +19,7 @@ public class CustomToasts {
         TextView toastMessage = view.findViewById(R.id.custom_toast_message_text);
         toastMessage.setText(message);
 
+        // this because custom toasts are deprecated - will use snackbar next time
         toast.setView(view);
         toast.show();
     }

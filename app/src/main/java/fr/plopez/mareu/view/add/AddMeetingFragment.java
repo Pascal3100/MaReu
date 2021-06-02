@@ -25,11 +25,6 @@ import fr.plopez.mareu.view.ViewModelFactory;
 import fr.plopez.mareu.view.view_utils.AutoCompleteRoomSelectorMenuAdapter;
 import fr.plopez.mareu.view.view_utils.CustomToasts;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddMeetingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddMeetingFragment extends Fragment implements View.OnClickListener {
 
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
@@ -63,7 +58,6 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                 }
             };
 
-    private AutoCompleteRoomSelectorMenuAdapter adapter;
     private int hour, min;
 
     /**
@@ -146,7 +140,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
-        adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext());
+        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
         addMeetingViewModel.getMeetingRoomItemList().observe(
