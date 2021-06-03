@@ -2,7 +2,6 @@ package fr.plopez.mareu.view.add;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +35,6 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
                     String inputFieldText = v.getText().toString();
-                    Log.d("TAG", "-------- onEditorAction: inputFieldText =" + inputFieldText);
 
                     if (v.getId() == fragAddMeetingActBinding.emailInputContent.getId()) {
 
@@ -60,12 +58,6 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
     private int hour, min;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AddMeetingActivityFragment.
-     */
     public static AddMeetingFragment newInstance() {
         return new AddMeetingFragment();
     }
@@ -140,14 +132,16 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
+/*
         AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext());
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
+*/
 
         addMeetingViewModel.getMeetingRoomItemList().observe(
                 getViewLifecycleOwner(),
                 meetingRoomItemList -> {
-                    adapter.clear();
-                    adapter.addAll(meetingRoomItemList);
+                    AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext(), meetingRoomItemList);
+                    fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
                 });
 
         // init observer

@@ -24,9 +24,9 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     // Saves the list of items because of the filtering operations
     private final List<MeetingRoomItem> meetingRoomItemListFull;
 
-    public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context) {
-        super(context, resource);
-        meetingRoomItemListFull = new ArrayList<>();
+    public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context, @NonNull List<MeetingRoomItem> meetingRoomItemList) {
+        super(context, resource, meetingRoomItemList);
+        meetingRoomItemListFull = new ArrayList<>(meetingRoomItemList);
     }
 
     @NonNull
