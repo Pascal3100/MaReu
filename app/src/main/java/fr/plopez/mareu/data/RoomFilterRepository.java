@@ -11,22 +11,16 @@ import fr.plopez.mareu.view.model.MeetingRoomItem;
 
 public class RoomFilterRepository {
 
-    private static RoomFilterRepository roomFilterRepositoryInstance;
-    private static RoomsRepository roomsRepositoryInstance;
-    private static List<MeetingRoomItem> meetingRoomItemsList;
-    private static final MutableLiveData<List<MeetingRoomItem>> meetingRoomItemListMutableLiveData = new MutableLiveData<>();
+    private final RoomsRepository roomsRepositoryInstance;
+    private List<MeetingRoomItem> meetingRoomItemsList;
+    private final MutableLiveData<List<MeetingRoomItem>> meetingRoomItemListMutableLiveData = new MutableLiveData<>();
 
-    // Singleton
-    public static RoomFilterRepository getRoomFilterRepositoryInstance() {
-        if (roomFilterRepositoryInstance == null) {
-            roomFilterRepositoryInstance = new RoomFilterRepository();
-            roomFilterRepositoryInstance.initRepo();
-        }
-        return roomFilterRepositoryInstance;
+    public RoomFilterRepository(RoomsRepository roomsRepositoryInstance) {
+        this.roomsRepositoryInstance = roomsRepositoryInstance;
+        initRepo();
     }
 
     private void initRepo() {
-        roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
         buildRoomItems();
         meetingRoomItemListMutableLiveData.setValue(meetingRoomItemsList);
     }

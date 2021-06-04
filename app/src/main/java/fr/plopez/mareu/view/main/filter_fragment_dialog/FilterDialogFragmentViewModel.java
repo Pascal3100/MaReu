@@ -40,13 +40,19 @@ public class FilterDialogFragmentViewModel extends ViewModel {
         LiveData<List<MeetingTimeItem>> timeFilterLiveData = timeFilterRepository.getMeetingTimeItemListLiveData();
 
         // Add meeting list to mediatorLiveData
-        numberOfFilteredMeetingMediatorLiveData.addSource(meetingsLiveData, meetingsLiveData1 -> combine(meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue()));
+        numberOfFilteredMeetingMediatorLiveData.addSource(
+                meetingsLiveData, meetingsLiveData1 -> combine(
+                        meetingsLiveData1, roomFilterLiveData.getValue(), timeFilterLiveData.getValue()));
 
         // Add room filter to mediatorLiveData
-        numberOfFilteredMeetingMediatorLiveData.addSource(roomFilterLiveData, meetingRoomItemList -> combine(meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue()));
+        numberOfFilteredMeetingMediatorLiveData.addSource(
+                roomFilterLiveData, meetingRoomItemList -> combine(
+                        meetingsLiveData.getValue(), meetingRoomItemList, timeFilterLiveData.getValue()));
 
         // Add time filter to mediatorLiveData
-        numberOfFilteredMeetingMediatorLiveData.addSource(timeFilterLiveData, meetingTimeItemList -> combine(meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList));
+        numberOfFilteredMeetingMediatorLiveData.addSource(
+                timeFilterLiveData, meetingTimeItemList -> combine(
+                        meetingsLiveData.getValue(), roomFilterLiveData.getValue(), meetingTimeItemList));
     }
 
     private void combine(@Nullable List<Meeting> meetingsList,
@@ -83,7 +89,7 @@ public class FilterDialogFragmentViewModel extends ViewModel {
         timeFilterRepository.updateMeetingTimeItemList(meetingTimeItemList);
     }
 
-    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList() {
+    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemListLiveData() {
         return roomFilterRepository.getMeetingRoomItemListLiveData();
     }
 

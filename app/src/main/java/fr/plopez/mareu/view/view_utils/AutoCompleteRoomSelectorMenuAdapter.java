@@ -1,102 +1,76 @@
 package fr.plopez.mareu.view.view_utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.databinding.DropDownItemBinding;
+import fr.plopez.mareu.view.add.OnRoomSelectorItemClickListener;
 import fr.plopez.mareu.view.model.MeetingRoomItem;
 
 public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoomItem> {
 
     private static final int resource = 0;
     private DropDownItemBinding dropDownItemBinding;
+    private OnRoomSelectorItemClickListener onRoomSelectorItemClick;
 
-    // Saves the list of items because of the filtering operations
-    private final List<MeetingRoomItem> meetingRoomItemListFull;
-
-    public AutoCompleteRoomSelectorMenuAdapter(@NonNull Context context, @NonNull List<MeetingRoomItem> meetingRoomItemList) {
-        super(context, resource, meetingRoomItemList);
-        meetingRoomItemListFull = new ArrayList<>(meetingRoomItemList);
+    public AutoCompleteRoomSelectorMenuAdapter(
+            @NonNull Context context,
+            OnRoomSelectorItemClickListener onRoomSelectorItemClick) {
+        super(context, resource);
+        this.onRoomSelectorItemClick = onRoomSelectorItemClick;
     }
 
-    @NonNull
-    @Override
-    public Filter getFilter() {
-        return roomsFilter;
-    }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        // Inflate a nex item only if its not recycled
+        // Inflate a new item only if its not recycled
         if (convertView == null) {
-/*
-            convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.drop_down_item, parent, false
-            );
-*/
             dropDownItemBinding = DropDownItemBinding.inflate(LayoutInflater.from(getContext()), parent, false);
             convertView = dropDownItemBinding.getRoot();
-
         }
 
         MeetingRoomItem item = getItem(position);
+
         if (item != null) {
             dropDownItemBinding.roomName.setText(item.getRoomName());
             dropDownItemBinding.roomLogo.setImageResource(item.getRoomImageId());
         }
 
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRoomSelectorItemClick.onRoomSelectorItemClickListener(item);
+            }
+        });
+
         return convertView;
     }
 
-    private final Filter roomsFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults filteredRoomsResult = new FilterResults();
-            List<MeetingRoomItem> filteredRooms = new ArrayList<>();
-
-
-            if (constraint == null || constraint.length() == 0) {
-                // No filter pattern applied, all the rooms will be available
-                filteredRooms.addAll(meetingRoomItemListFull);
-            } else {
-                // Making some formatting operations on the filter pattern
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (MeetingRoomItem item : meetingRoomItemListFull) {
-                    if (item.getRoomName().toLowerCase().contains(filterPattern)) {
-                        filteredRooms.add(item);
-                    }
-                }
-            }
-
-            filteredRoomsResult.values = filteredRooms;
-            filteredRoomsResult.count = filteredRooms.size();
-
-            return filteredRoomsResult;
+    public void submitList(List<MeetingRoomItem> meetingRoomItemList) {
+        clear();
+        addAll(meetingRoomItemList);
+        //notifyDataSetChanged();
+/*
+        Log.d("TAG", "-----------------------------------------------");
+        Log.d("TAG", "meetingRoomItemList size = "+meetingRoomItemList.size());
+        Log.d("TAG", "-----------------------------------------------");
+        for (MeetingRoomItem m : meetingRoomItemList){
+            Log.d("TAG", "-------- "+m.getRoomName());
         }
+        Log.d("TAG", "-----------------------------------------------");
+*/
 
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            clear();
-            addAll((List<MeetingRoomItem>) results.values);
-            notifyDataSetChanged();
-        }
+    }
 
-        @Override
-        public CharSequence convertResultToString(Object resultValue) {
-            return ((MeetingRoomItem) resultValue).getRoomName();
-        }
-    };
 }

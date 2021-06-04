@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    private static final List<Meeting> meetingList = FakeMeetingsGen.generateFakeMeetingList(RoomsRepository.getRoomsRepositoryInstance());
+    private static final List<Meeting> meetingList = FakeMeetingsGen.generateFakeMeetingList(new RoomsRepository());
     private static final int ITEMS_COUNT = meetingList.size();
     private static final int SELECTED_MEETING_POSITION = 1;
     private static final String FILTER_DIALOG_MATCH_TEXT = "1 " + ApplicationProvider.getApplicationContext().getString(R.string.filter_text_message_singular);

@@ -2,6 +2,9 @@ package fr.plopez.mareu.view.add;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +24,11 @@ import fr.plopez.mareu.R;
 import fr.plopez.mareu.data.model.Time;
 import fr.plopez.mareu.databinding.FragmentAddMeetingActivityBinding;
 import fr.plopez.mareu.view.ViewModelFactory;
+import fr.plopez.mareu.view.model.MeetingRoomItem;
 import fr.plopez.mareu.view.view_utils.AutoCompleteRoomSelectorMenuAdapter;
 import fr.plopez.mareu.view.view_utils.CustomToasts;
 
-public class AddMeetingFragment extends Fragment implements View.OnClickListener {
+public class AddMeetingFragment extends Fragment implements View.OnClickListener, OnRoomSelectorItemClickListener {
 
     private FragmentAddMeetingActivityBinding fragAddMeetingActBinding;
     private AddMeetingViewModel addMeetingViewModel;
@@ -120,6 +124,23 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
             fragAddMeetingActBinding.emailInputContent.setText("");
         });
 
+        // Set the room selector filter utility
+        fragAddMeetingActBinding.roomSelectorMenu.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                addMeetingViewModel.updateTextFilterPattern(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         return view;
     }
@@ -132,16 +153,14 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
-/*
-        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext());
+        AutoCompleteRoomSelectorMenuAdapter adapter =
+                new AutoCompleteRoomSelectorMenuAdapter(requireContext(), this);
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
-*/
 
-        addMeetingViewModel.getMeetingRoomItemList().observe(
+        addMeetingViewModel.getFilteredMeetingRoomItemLiveData().observe(
                 getViewLifecycleOwner(),
                 meetingRoomItemList -> {
-                    AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext(), meetingRoomItemList);
-                    fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
+                    adapter.submitList(meetingRoomItemList);
                 });
 
         // init observer
@@ -208,5 +227,10 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
         Chip emailChip = (Chip) v;
         addMeetingViewModel.removeEmail(emailChip.getText().toString());
         fragAddMeetingActBinding.emailsChipGroup.removeView(emailChip);
+    }
+
+    @Override
+    public void onRoomSelectorItemClickListener(MeetingRoomItem meetingRoomItem) {
+        fragAddMeetingActBinding.roomSelectorMenu.setText(meetingRoomItem.getRoomName());
     }
 }

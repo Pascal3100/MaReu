@@ -1,7 +1,9 @@
 package fr.plopez.mareu.view.add;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -24,6 +26,13 @@ public class AddMeetingViewModel extends ViewModel {
     // LiveData for emails management
     private final MutableLiveData<List<String>> emailsListMutableLiveData = new MutableLiveData<>();
 
+    // LiveData for text pattern filter
+    private final MutableLiveData<String> textFilterPatternMutableLiveData = new MutableLiveData<>();
+
+    // LiveData for filtered rooms
+    private final MediatorLiveData<List<MeetingRoomItem>> filteredMeetingRoomItemsMediatorLiveData =
+            new MediatorLiveData<>();
+
     // Meeting hosted data
     private String subject = "";
     private String startTime = "";
@@ -34,6 +43,48 @@ public class AddMeetingViewModel extends ViewModel {
                                RoomFilterRepository roomFilterRepository) {
         this.meetingsRepository = meetingsRepository;
         this.roomFilterRepository = roomFilterRepository;
+
+        LiveData<List<MeetingRoomItem>> meetingRoomItemLiveData =
+                roomFilterRepository.getMeetingRoomItemListLiveData();
+
+        // Add meetings item list to mediatorLiveData
+        filteredMeetingRoomItemsMediatorLiveData.addSource(meetingRoomItemLiveData, new Observer<List<MeetingRoomItem>>() {
+            @Override
+            public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
+                combine(meetingRoomItemList, textFilterPatternMutableLiveData.getValue());
+            }
+        });
+
+        // Add text filter pattern to mediatorLiveData
+        filteredMeetingRoomItemsMediatorLiveData.addSource(textFilterPatternMutableLiveData, new Observer<String>() {
+            @Override
+            public void onChanged(String filterTextPattern) {
+                combine(meetingRoomItemLiveData.getValue(), filterTextPattern);
+            }
+        });
+    }
+
+    private void combine(List<MeetingRoomItem> meetingRoomItemList, String filterTextPattern) {
+
+        if (filterTextPattern == null ||
+            filterTextPattern.length() == 0 ||
+                roomFilterRepository.getRoomsNames().contains(filterTextPattern)) {
+            // No filter pattern applied, all the rooms will be available
+            filteredMeetingRoomItemsMediatorLiveData.setValue(meetingRoomItemList);
+        } else {
+            List<MeetingRoomItem> filteredMeetingRoomItemList = new ArrayList<>();
+            // Making some formatting operations on the filter pattern
+            for (MeetingRoomItem item : meetingRoomItemList) {
+                if (item.getRoomName().contains(filterTextPattern)) {
+                    filteredMeetingRoomItemList.add(item);
+                }
+            }
+            filteredMeetingRoomItemsMediatorLiveData.setValue(filteredMeetingRoomItemList);
+        }
+    }
+
+    public LiveData<List<MeetingRoomItem>> getFilteredMeetingRoomItemLiveData() {
+        return filteredMeetingRoomItemsMediatorLiveData;
     }
 
     public SingleLiveEvent<AddMeetingViewAction> getAddMeetingViewActionSingleLiveEvent() {
@@ -106,19 +157,18 @@ public class AddMeetingViewModel extends ViewModel {
         emailsListMutableLiveData.setValue(emailsList);
     }
 
-
-    // Provides rooms items list
-    public LiveData<List<MeetingRoomItem>> getMeetingRoomItemList() {
-        return roomFilterRepository.getMeetingRoomItemListLiveData();
-    }
-
     // Emails LiveData getter
     public LiveData<List<String>> getEmailsListLiveData() {
         return emailsListMutableLiveData;
+    }
+
+    public void updateTextFilterPattern(String textFilterPattern){
+        textFilterPatternMutableLiveData.setValue(textFilterPattern);
     }
 
     // Empty Strings checker util
     private boolean checkIfStringIsEmpty(String inputString) {
         return inputString == null || inputString.isEmpty();
     }
+
 }

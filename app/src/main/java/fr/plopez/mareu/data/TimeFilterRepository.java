@@ -9,24 +9,17 @@ import fr.plopez.mareu.utils.TimeGen;
 import fr.plopez.mareu.view.model.MeetingTimeItem;
 
 public class TimeFilterRepository {
-    private static TimeFilterRepository timeFilterRepositoryInstance;
     private static List<MeetingTimeItem> meetingTimeItemsList;
     private static final MutableLiveData<List<MeetingTimeItem>> meetingTimeItemListMutableLiveData = new MutableLiveData<>();
 
-    // Singleton
-    public static TimeFilterRepository getTimeFilterRepositoryInstance() {
-        if (timeFilterRepositoryInstance == null) {
-            timeFilterRepositoryInstance = new TimeFilterRepository();
-            timeFilterRepositoryInstance.initRepo();
-        }
-        return timeFilterRepositoryInstance;
+    public TimeFilterRepository() {
+        initRepo();
     }
 
     private void initRepo() {
         meetingTimeItemsList = TimeGen.getAvailableTimes(8, 18);
         meetingTimeItemListMutableLiveData.setValue(meetingTimeItemsList);
     }
-
 
     public LiveData<List<MeetingTimeItem>> getMeetingTimeItemListLiveData() {
         return meetingTimeItemListMutableLiveData;

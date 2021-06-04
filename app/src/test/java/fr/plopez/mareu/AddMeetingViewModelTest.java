@@ -1,6 +1,7 @@
 package fr.plopez.mareu;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.MutableLiveData;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import fr.plopez.mareu.data.model.Room;
 import fr.plopez.mareu.utils.LiveDataTestUtils;
 import fr.plopez.mareu.view.add.AddMeetingViewAction;
 import fr.plopez.mareu.view.add.AddMeetingViewModel;
+import fr.plopez.mareu.view.model.MeetingRoomItem;
 
 import static fr.plopez.mareu.view.add.AddMeetingViewAction.DISPLAY_EMPTY_EMAIL_MESSAGE;
 import static fr.plopez.mareu.view.add.AddMeetingViewAction.DISPLAY_INCORRECT_EMAIL_MESSAGE;
@@ -57,12 +60,26 @@ public class AddMeetingViewModelTest {
         Mockito.doReturn(new Room("Mushroom", R.drawable.ic_room_mushroom))
                 .when(roomFilterRepository)
                 .getRoomByName("Mushroom");
+
         Mockito.doReturn(Arrays.asList("Flower", "Leaf", "Mushroom"))
-                .when(roomFilterRepository).getRoomsNames();
+                .when(roomFilterRepository)
+                .getRoomsNames();
+
+        MutableLiveData<List<MeetingRoomItem>> meetingRoomItemListLiveData = new MutableLiveData<>();
+        List<MeetingRoomItem> meetingRoomItemList = new ArrayList<>();
+        meetingRoomItemList.add(new MeetingRoomItem("Mushroom", R.drawable.ic_room_mushroom));
+        meetingRoomItemList.add(new MeetingRoomItem("Flower", R.drawable.ic_room_flower));
+        meetingRoomItemList.add(new MeetingRoomItem("Leaf", R.drawable.ic_room_leaf));
+        meetingRoomItemListLiveData.setValue(meetingRoomItemList);
+        Mockito.doReturn(meetingRoomItemListLiveData)
+                .when(roomFilterRepository)
+                .getMeetingRoomItemListLiveData();
 
         addMeetingViewModel = new AddMeetingViewModel(
                 meetingsRepository,
                 roomFilterRepository);
+
+        addMeetingViewModel.updateTextFilterPattern("");
     }
 
     // ----------------------------------------------------------------------------

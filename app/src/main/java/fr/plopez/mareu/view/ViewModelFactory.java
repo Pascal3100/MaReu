@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.utils.App;
 import fr.plopez.mareu.data.MeetingsRepository;
 import fr.plopez.mareu.data.RoomFilterRepository;
@@ -27,9 +28,10 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         return factory;
     }
 
-    private final MeetingsRepository meetingsRepository = MeetingsRepository.getMeetingsRepositoryInstance();
-    private final RoomFilterRepository roomFilterRepository = RoomFilterRepository.getRoomFilterRepositoryInstance();
-    private final TimeFilterRepository timeFilterRepository = TimeFilterRepository.getTimeFilterRepositoryInstance();
+    private final RoomsRepository roomsRepository = new RoomsRepository();
+    private final MeetingsRepository meetingsRepository = new MeetingsRepository(roomsRepository);
+    private final RoomFilterRepository roomFilterRepository = new RoomFilterRepository(roomsRepository);
+    private final TimeFilterRepository timeFilterRepository = new TimeFilterRepository();
 
     @SuppressWarnings("unchecked")
     @NonNull

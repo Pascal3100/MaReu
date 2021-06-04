@@ -12,21 +12,16 @@ import fr.plopez.mareu.utils.FakeMeetingsGen;
 
 public class MeetingsRepository {
 
-    private static MeetingsRepository MeetingsRepositoryInstance;
-
     private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
     private List<Meeting> meetingList = new ArrayList<>();
+    private final RoomsRepository roomsRepositoryInstance;
 
 
     private int lastGeneratedId = 0;
 
-    // Singleton
-    public static MeetingsRepository getMeetingsRepositoryInstance() {
-        if (MeetingsRepositoryInstance == null) {
-            MeetingsRepositoryInstance = new MeetingsRepository();
-            MeetingsRepositoryInstance.initRepo();
-        }
-        return MeetingsRepositoryInstance;
+    public MeetingsRepository(RoomsRepository roomsRepositoryInstance) {
+        this.roomsRepositoryInstance = roomsRepositoryInstance;
+        initRepo();
     }
 
     private void updateMeetingListMutableLiveData() {
@@ -39,8 +34,6 @@ public class MeetingsRepository {
     }
 
     private void initRepo() {
-        RoomsRepository roomsRepositoryInstance = RoomsRepository.getRoomsRepositoryInstance();
-
         //Dummy meetings generation for dev purpose only
         meetingList = FakeMeetingsGen.generateFakeMeetingList(roomsRepositoryInstance);
         lastGeneratedId += meetingList.size();
