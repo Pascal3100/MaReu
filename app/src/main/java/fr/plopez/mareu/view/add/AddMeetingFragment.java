@@ -4,7 +4,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -153,15 +152,13 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         updateTimeText();
 
-        AutoCompleteRoomSelectorMenuAdapter adapter =
-                new AutoCompleteRoomSelectorMenuAdapter(requireContext(), this);
+        AutoCompleteRoomSelectorMenuAdapter adapter = new AutoCompleteRoomSelectorMenuAdapter(requireContext(), this);
         fragAddMeetingActBinding.roomSelectorMenu.setAdapter(adapter);
 
         addMeetingViewModel.getFilteredMeetingRoomItemLiveData().observe(
                 getViewLifecycleOwner(),
-                meetingRoomItemList -> {
-                    adapter.submitList(meetingRoomItemList);
-                });
+                meetingRoomItemList -> adapter.submitList(meetingRoomItemList)
+        );
 
         // init observer
         addMeetingViewModel.getAddMeetingViewActionSingleLiveEvent().observe(

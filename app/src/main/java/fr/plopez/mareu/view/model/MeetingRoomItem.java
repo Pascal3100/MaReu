@@ -1,5 +1,9 @@
 package fr.plopez.mareu.view.model;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
+
 public class MeetingRoomItem {
     private final String roomName;
     private final int roomImageId;
@@ -24,5 +28,12 @@ public class MeetingRoomItem {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public String toString() {
+        return roomName;
     }
 }
