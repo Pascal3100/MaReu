@@ -3,7 +3,6 @@ package fr.plopez.mareu.view.add;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -48,27 +47,19 @@ public class AddMeetingViewModel extends ViewModel {
                 roomFilterRepository.getMeetingRoomItemListLiveData();
 
         // Add meetings item list to mediatorLiveData
-        filteredMeetingRoomItemsMediatorLiveData.addSource(meetingRoomItemLiveData, new Observer<List<MeetingRoomItem>>() {
-            @Override
-            public void onChanged(List<MeetingRoomItem> meetingRoomItemList) {
-                combine(meetingRoomItemList, textFilterPatternMutableLiveData.getValue());
-            }
-        });
+        filteredMeetingRoomItemsMediatorLiveData.addSource(meetingRoomItemLiveData,
+                meetingRoomItemList -> combine(meetingRoomItemList, textFilterPatternMutableLiveData.getValue()));
 
         // Add text filter pattern to mediatorLiveData
-        filteredMeetingRoomItemsMediatorLiveData.addSource(textFilterPatternMutableLiveData, new Observer<String>() {
-            @Override
-            public void onChanged(String filterTextPattern) {
-                combine(meetingRoomItemLiveData.getValue(), filterTextPattern);
-            }
-        });
+        filteredMeetingRoomItemsMediatorLiveData.addSource(textFilterPatternMutableLiveData,
+                filterTextPattern -> combine(meetingRoomItemLiveData.getValue(), filterTextPattern));
     }
 
+    // Filter utility for exposed drop down menu
     private void combine(List<MeetingRoomItem> meetingRoomItemList, String filterTextPattern) {
 
         if (filterTextPattern == null ||
-            filterTextPattern.length() == 0 ||
-                roomFilterRepository.getRoomsNames().contains(filterTextPattern)) {
+            filterTextPattern.length() == 0) {
             // No filter pattern applied, all the rooms will be available
             filteredMeetingRoomItemsMediatorLiveData.setValue(meetingRoomItemList);
         } else {

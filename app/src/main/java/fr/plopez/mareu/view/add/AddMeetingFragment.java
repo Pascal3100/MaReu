@@ -157,7 +157,7 @@ public class AddMeetingFragment extends Fragment implements View.OnClickListener
 
         addMeetingViewModel.getFilteredMeetingRoomItemLiveData().observe(
                 getViewLifecycleOwner(),
-                meetingRoomItemList -> adapter.submitList(meetingRoomItemList)
+                adapter::submitList
         );
 
         // init observer

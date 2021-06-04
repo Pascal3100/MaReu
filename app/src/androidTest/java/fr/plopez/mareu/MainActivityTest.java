@@ -36,13 +36,14 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
+    @Rule
+    public final ActivityScenario<MainActivity> mActivityRule =
+            new ActivityScenarioRule<>(MainActivity.class).getScenario();
+
     private static final List<Meeting> meetingList = FakeMeetingsGen.generateFakeMeetingList(new RoomsRepository());
     private static final int ITEMS_COUNT = meetingList.size();
     private static final int SELECTED_MEETING_POSITION = 1;
     private static final String FILTER_DIALOG_MATCH_TEXT = "1 " + ApplicationProvider.getApplicationContext().getString(R.string.filter_text_message_singular);
-
-    @Rule
-    public final ActivityScenario<MainActivity> mActivityRule = new ActivityScenarioRule<>(MainActivity.class).getScenario();
 
     @Before
     public void setUp() {

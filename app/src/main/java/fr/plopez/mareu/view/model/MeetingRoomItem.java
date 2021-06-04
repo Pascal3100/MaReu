@@ -36,4 +36,5 @@ public class MeetingRoomItem {
     public String toString() {
         return roomName;
     }
+
 }

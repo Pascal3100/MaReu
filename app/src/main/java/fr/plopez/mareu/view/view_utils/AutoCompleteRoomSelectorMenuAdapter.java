@@ -1,6 +1,7 @@
 package fr.plopez.mareu.view.view_utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     @NonNull
     private final OnRoomSelectorItemClickListener onRoomSelectorItemClick;
 
+    @Nullable
+    private List<MeetingRoomItem> meetingRoomItemList;
+
     public AutoCompleteRoomSelectorMenuAdapter(
         @NonNull Context context,
         @NonNull OnRoomSelectorItemClickListener onRoomSelectorItemClick
@@ -34,6 +38,17 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
         return getCustomView(position, parent);
     }
 
+    @Nullable
+    @Override
+    public MeetingRoomItem getItem(int position) {
+        return meetingRoomItemList.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return meetingRoomItemList.size();
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -42,8 +57,10 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
 
     @NonNull
     private View getCustomView(int position, @NonNull ViewGroup parent) {
-        DropDownItemBinding dropDownItemBinding = DropDownItemBinding.inflate(LayoutInflater.from(getContext()), parent, false);
+        DropDownItemBinding dropDownItemBinding =
+                DropDownItemBinding.inflate(LayoutInflater.from(getContext()), parent, false);
         View root = dropDownItemBinding.getRoot();
+
         MeetingRoomItem item = getItem(position);
 
         if (item != null) {
@@ -51,19 +68,16 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
             dropDownItemBinding.roomLogo.setImageResource(item.getRoomImageId());
         }
 
-        root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRoomSelectorItemClick.onRoomSelectorItemClickListener(item);
-            }
-        });
+        root.setOnClickListener(view -> onRoomSelectorItemClick.onRoomSelectorItemClickListener(item));
 
         return root;
     }
 
     public void submitList(List<MeetingRoomItem> meetingRoomItemList) {
+        this.meetingRoomItemList = meetingRoomItemList;
         clear();
         addAll(meetingRoomItemList);
+        Log.d("TAG", "---------------------------------------------------");
     }
 
 }
