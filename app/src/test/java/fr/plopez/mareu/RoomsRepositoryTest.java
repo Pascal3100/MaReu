@@ -20,7 +20,7 @@ public class RoomsRepositoryTest {
     // mocks
 
     // class variables
-    private final RoomsRepository roomsRepository = RoomsRepository.getRoomsRepositoryInstance();
+    private final RoomsRepository roomsRepository = new RoomsRepository();
 
     @Test
     public void get_room_object_by_name_nominal_case(){
@@ -28,7 +28,7 @@ public class RoomsRepositoryTest {
 
         Room result = roomsRepository.getRoomByName(CORRECT_ROOM_INPUT);
 
-        assertEquals(result.getName(), CORRECT_ROOM_INPUT.toLowerCase());
+        assertEquals(result.getName(), CORRECT_ROOM_INPUT);
     }
 
     @Test

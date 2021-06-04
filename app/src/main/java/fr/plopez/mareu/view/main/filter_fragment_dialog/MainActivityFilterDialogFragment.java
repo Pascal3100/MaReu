@@ -75,7 +75,7 @@ public class MainActivityFilterDialogFragment extends DialogFragment implements 
         // Observe roomItemsList
         fragmentFilterDialogBinding.roomFilter.setAdapter(roomRecyclerViewAdapter);
 
-        filterDialogViewModel.getMeetingRoomItemList().observe(
+        filterDialogViewModel.getMeetingRoomItemListLiveData().observe(
                 getViewLifecycleOwner(), roomRecyclerViewAdapter::submitList);
 
 

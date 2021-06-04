@@ -30,12 +30,12 @@ public class MeetingsFilterUtil {
         List<String> roomsFilter = new ArrayList<>();
         for (MeetingRoomItem meetingRoomItem : meetingRoomItemList) {
             if (meetingRoomItem.isChecked()) {
-                roomsFilter.add(meetingRoomItem.getRoomName().toLowerCase());
+                roomsFilter.add(meetingRoomItem.getRoomName());
             }
         }
         if (roomsFilter.size() > 0) {
             for (Meeting meeting : filteredMeetingsList) {
-                if (!roomsFilter.contains(meeting.getRoom().getName().toLowerCase())) {
+                if (!roomsFilter.contains(meeting.getRoom().getName())) {
                     meetingsToNotKeep.add(meeting);
                 }
             }

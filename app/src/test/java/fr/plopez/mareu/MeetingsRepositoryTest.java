@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 import fr.plopez.mareu.data.MeetingsRepository;
+import fr.plopez.mareu.data.RoomsRepository;
 import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.data.model.Room;
 import fr.plopez.mareu.utils.LiveDataTestUtils;
@@ -50,7 +51,7 @@ public class MeetingsRepositoryTest {
 
     @Before
     public void setUp() {
-        meetingsRepository = MeetingsRepository.getMeetingsRepositoryInstance();
+        meetingsRepository = new MeetingsRepository(new RoomsRepository());
         numberOfMeetings = meetingsRepository.getMeetings().getValue().size();
     }
 
