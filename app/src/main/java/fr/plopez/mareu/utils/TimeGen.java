@@ -11,8 +11,16 @@ public class TimeGen {
 
         List<MeetingTimeItem> availableTimes = new ArrayList<>();
 
+        String time = "";
+
         for (int i = startTime; i < endTime+1; i++) {
-            availableTimes.add(new MeetingTimeItem(i+":00"));
+
+            if (i < 10) {
+                time = "0"+i+":00";
+            } else {
+                time = i+":00";
+            }
+            availableTimes.add(new MeetingTimeItem(time));
         }
 
         return availableTimes;

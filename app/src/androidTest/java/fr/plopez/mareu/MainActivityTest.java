@@ -37,8 +37,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class MainActivityTest {
 
     @Rule
-    public final ActivityScenario<MainActivity> mActivityRule =
-            new ActivityScenarioRule<>(MainActivity.class).getScenario();
+    public final ActivityScenarioRule<MainActivity> activityScenarioRule = new ActivityScenarioRule<>(MainActivity.class);
 
     private static final List<Meeting> meetingList = FakeMeetingsGen.generateFakeMeetingList(new RoomsRepository());
     private static final int ITEMS_COUNT = meetingList.size();
@@ -47,7 +46,8 @@ public class MainActivityTest {
 
     @Before
     public void setUp() {
-        assertThat(mActivityRule, notNullValue());
+        ActivityScenario<MainActivity> activityScenario = activityScenarioRule.getScenario();
+        assertThat(activityScenario, notNullValue());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class MainActivityTest {
         // click on the flower room item filter
         onView(allOf(withId(R.id.room_filter), isDisplayed()))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(
-                        2, click())
+                        3, click())
                 );
 
         // verify the text is updated the right way

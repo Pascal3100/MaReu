@@ -1,5 +1,7 @@
 package fr.plopez.mareu.utils;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;

@@ -59,7 +59,8 @@ public class FilterDialogFragmentViewModel extends ViewModel {
                          @Nullable List<MeetingRoomItem> meetingRoomItemList,
                          @Nullable List<MeetingTimeItem> meetingTimeItemList) {
 
-        numberOfFilteredMeetingMediatorLiveData.setValue(mapNumberOfFilteredMeetingToString(MeetingsFilterUtil.meetingsFilter(
+        numberOfFilteredMeetingMediatorLiveData.setValue(
+                mapNumberOfFilteredMeetingToString(MeetingsFilterUtil.meetingsFilter(
                 meetingsList,
                 meetingRoomItemList,
                 meetingTimeItemList).size())

@@ -16,22 +16,22 @@ public class FakeMeetingsGen {
 
         meetingList.add(new Meeting(
                 lastGeneratedId++,
-                "Mentorat with Nino",
+                "Scrum meeting",
                 "12:30",
                 roomsRepositoryInstance.getRoomByName("Flower"),
-                Arrays.asList("pascal.lopez@expleogroup.com", "anthony.delcey.fr@gmail.com")));
+                Arrays.asList("anonyme1@expleogroup.com", "anonyme2@expleogroup.com", "anonyme3@expleogroup.com")));
         meetingList.add(new Meeting(
                 lastGeneratedId++,
                 "Code review",
-                "9:30",
+                "09:30",
                 roomsRepositoryInstance.getRoomByName("Leaf"),
-                Arrays.asList("pascal.lopez@expleogroup.com", "jojoLaFrite@gmail.com", "toto@gmail.com")));
+                Arrays.asList("some.one@expleogroup.com", "another.one@expleogroup.com")));
         meetingList.add(new Meeting(
                 lastGeneratedId,
                 "JCVD Interview",
                 "11:00",
                 roomsRepositoryInstance.getRoomByName("Mushroom"),
-                Arrays.asList("jcvd@gmail.com", "anthony.delcey.fr@gmail.com")));
+                Arrays.asList("jcvd@gmail.com", "xor@gmail.com", "candy@gmail.com")));
 
         return meetingList;
     }
