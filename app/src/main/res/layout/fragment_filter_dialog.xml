@@ -16,6 +16,7 @@
 
         <ImageView
             android:id="@+id/banner"
+            android:importantForAccessibility="no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_banner_fragment_dialog"
@@ -72,10 +73,10 @@
             app:layout_constraintTop_toBottomOf="@+id/banner">
 
             <TextView
-                android:id="@+id/time_filter_label"
+                android:id="@+id/time_filter_label_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time filter"
+                android:text="@string/time_filter_title"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="italic"

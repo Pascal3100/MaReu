@@ -19,4 +19,7 @@
     <string name="clock_picker_state_icon">clock picker state icon</string>
     <string name="meeting_view_holder_room_icon_description">meeting view holder room icon</string>
     <string name="meeting_view_holder_trash_icon_description">meeting view holder trash icon</string>
+    <string name="room_logo_description">room logo</string>
+    <string name="time_filter_title">Time filter</string>
+    <string name="add_new_meeting_button_description">Add new meeting button</string>
 </resources>

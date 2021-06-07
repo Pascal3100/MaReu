@@ -1,7 +1,6 @@
 package fr.plopez.mareu.view.view_utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.R;
@@ -22,8 +22,8 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     @NonNull
     private final OnRoomSelectorItemClickListener onRoomSelectorItemClick;
 
-    @Nullable
-    private List<MeetingRoomItem> meetingRoomItemList;
+    @NonNull
+    private final List<MeetingRoomItem> meetingRoomItemList = new ArrayList<>();
 
     public AutoCompleteRoomSelectorMenuAdapter(
         @NonNull Context context,
@@ -74,10 +74,10 @@ public class AutoCompleteRoomSelectorMenuAdapter extends ArrayAdapter<MeetingRoo
     }
 
     public void submitList(List<MeetingRoomItem> meetingRoomItemList) {
-        this.meetingRoomItemList = meetingRoomItemList;
+        this.clear();
+        this.meetingRoomItemList.addAll(meetingRoomItemList);
         clear();
         addAll(meetingRoomItemList);
-        Log.d("TAG", "---------------------------------------------------");
     }
 
 }

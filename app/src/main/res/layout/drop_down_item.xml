@@ -7,6 +7,7 @@
     android:padding="8dp">
     <ImageView
         android:id="@+id/room_logo"
+        android:contentDescription="@string/room_logo_description"
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,8 +19,6 @@
 
     </ImageView>
     <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/room_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
