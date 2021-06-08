@@ -327,4 +327,53 @@ public class AddMeetingViewModelTest {
         // Then
         assertEquals(DISPLAY_INCORRECT_EMAIL_MESSAGE, result);
     }
+
+    // Test that filter return complete meeting room item list when filter text pattern is null or empty
+    @Test
+    public void update_text_filter_and_verify_complete_meeting_room_item_list_is_returned_test() throws InterruptedException {
+
+        // Given
+        addMeetingViewModel.updateTextFilterPattern(null);
+
+        // When
+        List<MeetingRoomItem> result = LiveDataTestUtils
+                .getOrAwaitValue(addMeetingViewModel.getFilteredMeetingRoomItemLiveData());
+
+        // Then
+        int NOMINAL_NUMBER_OF_MEETING_ROOM_ITEMS = 3;
+        assertEquals(NOMINAL_NUMBER_OF_MEETING_ROOM_ITEMS, result.size());
+    }
+
+    // Test that filter return filtered meeting room item list when filter text pattern is correct
+    @Test
+    public void update_text_filter_and_verify_filtered_meeting_room_item_list_is_returned_test() throws InterruptedException {
+
+        // Given
+        String FILTER_PATTERN_FOR_MUSHROOM = "M";
+        addMeetingViewModel.updateTextFilterPattern(FILTER_PATTERN_FOR_MUSHROOM);
+
+        // When
+        List<MeetingRoomItem> result = LiveDataTestUtils
+                .getOrAwaitValue(addMeetingViewModel.getFilteredMeetingRoomItemLiveData());
+
+        // Then
+        assertEquals(CORRECT_ROOM_INPUT, result.get(0).getRoomName());
+        assertEquals(1, result.size());
+    }
+
+    // Test that filter return no meeting room item list when filter text pattern is incorrect
+    @Test
+    public void update_text_filter_and_verify_no_meeting_room_item_list_is_returned_test() throws InterruptedException {
+
+        // Given
+        String FILTER_PATTERN_FOR_NO_RESULT = "K";
+        addMeetingViewModel.updateTextFilterPattern(FILTER_PATTERN_FOR_NO_RESULT);
+
+        // When
+        List<MeetingRoomItem> result = LiveDataTestUtils
+                .getOrAwaitValue(addMeetingViewModel.getFilteredMeetingRoomItemLiveData());
+
+        // Then
+        assertEquals(0, result.size());
+    }
 }

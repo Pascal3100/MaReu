@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class MeetingsRepositoryTest {
 
     // constants
+    private final int NUMBER_OF_MEETINGS = 3;
     private final String CORRECT_STRING_INPUT = "CORRECT_STRING_INPUT";
     private final String CORRECT_ROOM_INPUT = "Mushroom";
     private final int FAKE_MEETING_ID = 1;
@@ -46,13 +47,11 @@ public class MeetingsRepositoryTest {
 
     // class variables
     private MeetingsRepository meetingsRepository;
-    private int numberOfMeetings = 0;
 
 
     @Before
     public void setUp() {
         meetingsRepository = new MeetingsRepository(new RoomsRepository());
-        numberOfMeetings = meetingsRepository.getMeetings().getValue().size();
     }
 
     @Test
@@ -66,21 +65,21 @@ public class MeetingsRepositoryTest {
                 .getOrAwaitValue(meetingsRepository.getMeetings());
 
         // Then
-        assertEquals(numberOfMeetings +1, result.size());
+        assertEquals(NUMBER_OF_MEETINGS +1, result.size());
     }
 
     @Test
     public void remove_meeting_nominal_case_test() throws InterruptedException {
 
         // Given
-        meetingsRepository.deleteMeeting(meetingsRepository.getMeetings().getValue().get(0).getId());
+        meetingsRepository.deleteMeeting(0);
 
         // When
         List<Meeting> result = LiveDataTestUtils
                 .getOrAwaitValue(meetingsRepository.getMeetings());
 
         // Then
-        assertEquals(numberOfMeetings -1, result.size());
+        assertEquals(NUMBER_OF_MEETINGS -1, result.size());
     }
 
     @Test
@@ -95,7 +94,7 @@ public class MeetingsRepositoryTest {
                 .getOrAwaitValue(meetingsRepository.getMeetings());
 
         // Then
-        assertEquals(numberOfMeetings, result.size());
+        assertEquals(NUMBER_OF_MEETINGS, result.size());
     }
 
     @After

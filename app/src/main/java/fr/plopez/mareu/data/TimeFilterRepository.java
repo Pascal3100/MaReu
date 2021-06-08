@@ -10,7 +10,7 @@ import fr.plopez.mareu.view.model.MeetingTimeItem;
 
 public class TimeFilterRepository {
     private static List<MeetingTimeItem> meetingTimeItemsList;
-    private static final MutableLiveData<List<MeetingTimeItem>> meetingTimeItemListMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<MeetingTimeItem>> meetingTimeItemListMutableLiveData = new MutableLiveData<>();
 
     public TimeFilterRepository() {
         initRepo();

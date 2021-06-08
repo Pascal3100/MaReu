@@ -138,6 +138,28 @@ public class MainActivityViewModelTest {
         assertEquals(result.size(), 0);
     }
 
+    @Test
+    public void verify_delete_meeting_test() {
+        // Given
+        int meetingId = 666;
+
+        // When
+        mainActivityViewModel.deleteMeeting(
+                new MeetingViewState(
+                        "",
+                        "",
+                        0,
+                        meetingId
+                )
+        );
+
+        // Then
+        Mockito.verify(meetingsRepository).getMeetings();
+        Mockito.verify(meetingsRepository).deleteMeeting(666);
+        Mockito.verifyNoMoreInteractions(meetingsRepository);
+    }
+
+
     // region IN
     private List<MeetingRoomItem> getDefaultMeetingRoomItems() {
         List<MeetingRoomItem> meetingRoomItemList = new ArrayList<>();
