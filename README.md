@@ -22,4 +22,5 @@ Make sure you are in **final_version** branch of the project
 ## Tests JaCoCo report
 Unit tests cover 96% of code
 
-![image](https://user-images.githubusercontent.com/25769686/121165971-f64b4900-c850-11eb-8dd9-3d95c5bf09b8.png)
+![image](https://user-images.githubusercontent.com/25769686/121166393-50e4a500-c851-11eb-9a14-e00aaa385497.png)
+
