@@ -16,9 +16,10 @@ git clone https://github.com/Pascal3100/MaReu.git
 ```
 
 ## Launch
+Make sure you are in final_version branch of the project
 **Android Studio** hit Run and enjoy!
 
 ## Tests JaCoCo report
 Unit tests cover 96% of code
 
-![image](https://user-images.githubusercontent.com/25769686/121143784-b4fd6e00-c83d-11eb-9130-2dee672d47ad.png)
+![image](https://user-images.githubusercontent.com/25769686/121165971-f64b4900-c850-11eb-8dd9-3d95c5bf09b8.png)
