@@ -34,8 +34,6 @@ public class MeetingsRepository {
     }
 
     private void initRepo() {
-        //Dummy meetings generation for dev purpose only
-        meetingList = FakeMeetingsGen.generateFakeMeetingList(roomsRepositoryInstance);
         lastGeneratedId += meetingList.size();
         updateMeetingListMutableLiveData();
     }
