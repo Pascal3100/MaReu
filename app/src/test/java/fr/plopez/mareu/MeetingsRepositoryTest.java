@@ -52,6 +52,26 @@ public class MeetingsRepositoryTest {
     @Before
     public void setUp() {
         meetingsRepository = new MeetingsRepository(new RoomsRepository());
+        int lastGeneratedId = 0;
+
+        meetingsRepository.addMeeting(new Meeting(
+                lastGeneratedId++,
+                "Scrum meeting",
+                "12:30",
+                new Room("Flower", R.drawable.ic_room_flower),
+                Arrays.asList("anonyme1@expleogroup.com", "anonyme2@expleogroup.com", "anonyme3@expleogroup.com")));
+        meetingsRepository.addMeeting(new Meeting(
+                lastGeneratedId++,
+                "Code review",
+                "09:30",
+                new Room("Leaf", R.drawable.ic_room_leaf),
+                Arrays.asList("some.one@expleogroup.com", "another.one@expleogroup.com")));
+        meetingsRepository.addMeeting(new Meeting(
+                lastGeneratedId,
+                "JCVD Interview",
+                "11:00",
+                new Room("Mushroom", R.drawable.ic_room_mushroom),
+                Arrays.asList("jcvd@gmail.com", "xor@gmail.com", "candy@gmail.com")));
     }
 
     @Test

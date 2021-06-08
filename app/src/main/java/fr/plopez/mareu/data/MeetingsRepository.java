@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.plopez.mareu.data.model.Meeting;
-import fr.plopez.mareu.utils.FakeMeetingsGen;
 
 public class MeetingsRepository {
 
     private final MutableLiveData<List<Meeting>> meetingListMutableLiveData = new MutableLiveData<>();
-    private List<Meeting> meetingList = new ArrayList<>();
+    private final List<Meeting> meetingList = new ArrayList<>();
     private final RoomsRepository roomsRepositoryInstance;
 
 
@@ -27,7 +26,6 @@ public class MeetingsRepository {
     private void updateMeetingListMutableLiveData() {
         meetingListMutableLiveData.setValue(meetingList);
     }
-
 
     public LiveData<List<Meeting>> getMeetings() {
         return meetingListMutableLiveData;

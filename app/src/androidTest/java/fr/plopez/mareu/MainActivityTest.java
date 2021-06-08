@@ -11,12 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
-import fr.plopez.mareu.data.RoomsRepository;
-import fr.plopez.mareu.data.model.Meeting;
 import fr.plopez.mareu.utils.DeleteViewAction;
-import fr.plopez.mareu.utils.FakeMeetingsGen;
 import fr.plopez.mareu.utils.RecyclerViewItemCountAssertion;
 import fr.plopez.mareu.view.main.MainActivity;
 
@@ -24,6 +19,8 @@ import static androidx.test.espresso.Espresso.onView;
 
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressBack;
+import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -39,8 +36,6 @@ public class MainActivityTest {
     @Rule
     public final ActivityScenarioRule<MainActivity> activityScenarioRule = new ActivityScenarioRule<>(MainActivity.class);
 
-    private static final List<Meeting> meetingList = FakeMeetingsGen.generateFakeMeetingList(new RoomsRepository());
-    private static final int ITEMS_COUNT = meetingList.size();
     private static final int SELECTED_MEETING_POSITION = 1;
     private static final String FILTER_DIALOG_MATCH_TEXT = "1 " + ApplicationProvider.getApplicationContext().getString(R.string.filter_text_message_singular);
 
@@ -48,6 +43,41 @@ public class MainActivityTest {
     public void setUp() {
         ActivityScenario<MainActivity> activityScenario = activityScenarioRule.getScenario();
         assertThat(activityScenario, notNullValue());
+
+        // add two new meetings
+        // ---------- First -----------
+        // go to add view and fill fields
+        onView(withId(R.id.main_activity_fragment_fab))
+                .perform(click());
+        onView(withId(R.id.text_input_subject_content)).perform(replaceText("new subject"), pressImeActionButton());
+        onView(withId(R.id.room_selector_menu)).perform(replaceText("Mushroom"), pressImeActionButton());
+        onView(withId(R.id.email_input_content)).perform(replaceText("anonyme1@gmail.com"), pressImeActionButton());
+
+        // click on save meeting button
+        onView(withId(R.id.save_button)).perform(click());
+
+        // verify that the main activity is correctly loaded
+        onView(withId(R.id.main_activity_container))
+                .check(matches(isDisplayed()));
+
+        // ---------- Second -----------
+        // go to add view and fill fields
+        onView(withId(R.id.main_activity_fragment_fab))
+                .perform(click());
+        onView(withId(R.id.text_input_subject_content)).perform(replaceText("Other subject"), pressImeActionButton());
+        onView(withId(R.id.room_selector_menu)).perform(replaceText("Leaf"), pressImeActionButton());
+        onView(withId(R.id.email_input_content)).perform(replaceText("anonyme1@gmail.com"), pressImeActionButton());
+
+        // click on save meeting button
+        onView(withId(R.id.save_button)).perform(click());
+
+        // verify that the main activity is correctly loaded
+        onView(withId(R.id.main_activity_container))
+                .check(matches(isDisplayed()));
+
+        // verify we have the right number of meetings
+        onView(allOf(withId(R.id.main_activity_fragment_meeting_recycler_view), isDisplayed()))
+                .check(RecyclerViewItemCountAssertion.withItemCount(2));
     }
 
     @Test
@@ -70,7 +100,7 @@ public class MainActivityTest {
         // click on back navigation icon
         onView(withId(R.id.add_meeting_activity_app_bar)).perform(pressBack());
 
-        // verify that the add activity is correctly loaded
+        // verify that the main activity is correctly loaded
         onView(withId(R.id.main_activity_container))
                 .check(matches(isDisplayed()));
     }
@@ -80,7 +110,7 @@ public class MainActivityTest {
         // click on the filter action button to load the filter fragment
         onView(withId(R.id.sort_meetings)).perform(click());
 
-        // verify that the add activity is correctly loaded
+        // verify that the filter fragment is correctly loaded
         onView(withId(R.id.filter_fragment_container))
                 .check(matches(isDisplayed()));
     }
@@ -93,7 +123,7 @@ public class MainActivityTest {
         // click on close button
         onView(withId(R.id.closeFilterDialogButton)).perform(click());
 
-        // verify that the add activity is correctly loaded
+        // verify that the main activity is correctly loaded
         onView(withId(R.id.main_activity_container))
                 .check(matches(isDisplayed()));
     }
@@ -122,9 +152,6 @@ public class MainActivityTest {
 
     @Test
     public void main_activity_delete_meeting_test() {
-        // verify we have the right number of meetings
-        onView(allOf(withId(R.id.main_activity_fragment_meeting_recycler_view), isDisplayed()))
-                .check(RecyclerViewItemCountAssertion.withItemCount(ITEMS_COUNT));
 
         // click on the second meeting holder delete button
         onView(allOf(withId(R.id.main_activity_fragment_meeting_recycler_view), isDisplayed()))
@@ -133,6 +160,27 @@ public class MainActivityTest {
 
         // verify that the holder is deleted
         onView(allOf(withId(R.id.main_activity_fragment_meeting_recycler_view), isDisplayed()))
-                .check(RecyclerViewItemCountAssertion.withItemCount(ITEMS_COUNT-1));
+                .check(RecyclerViewItemCountAssertion.withItemCount(1));
+    }
+
+    @Test
+    public void main_activity_add_new_meeting_test(){
+        // click on the floating action button to load the add activity
+        onView(withId(R.id.main_activity_fragment_fab))
+                .perform(click());
+        onView(withId(R.id.text_input_subject_content)).perform(replaceText("newest subject"), pressImeActionButton());
+        onView(withId(R.id.room_selector_menu)).perform(replaceText("Flower"), pressImeActionButton());
+        onView(withId(R.id.email_input_content)).perform(replaceText("anonyme1@gmail.com"), pressImeActionButton());
+
+        // click on save meeting button
+        onView(withId(R.id.save_button)).perform(click());
+
+        // verify that the main activity is correctly loaded
+        onView(withId(R.id.main_activity_container))
+                .check(matches(isDisplayed()));
+
+        // verify that the meeting is displayed
+        onView(allOf(withId(R.id.main_activity_fragment_meeting_recycler_view), isDisplayed()))
+                .check(RecyclerViewItemCountAssertion.withItemCount(3));
     }
 }
