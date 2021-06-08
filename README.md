@@ -16,7 +16,7 @@ git clone https://github.com/Pascal3100/MaReu.git
 ```
 
 ## Launch
-Make sure you are in final_version branch of the project
+Make sure you are in **final_version** branch of the project  
 **Android Studio** hit Run and enjoy!
 
 ## Tests JaCoCo report
